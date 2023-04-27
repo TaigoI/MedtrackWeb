@@ -1,2 +1,2 @@
 # MedtrackWeb
-Desktop Website created with Flutter for Web
+Website created with React.js
