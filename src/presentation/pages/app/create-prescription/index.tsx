@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import Toolbar from '@mui/material/Toolbar';
 import { DashboardContainerComponent } from '../../../components/dashboard-container';
-import { Box, ListItem, ListSubheader, Switch, TextField } from '@mui/material';
+import { Box, ListItem, ListSubheader, Paper, Switch, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from '@mui/material';
 import { Print } from '@mui/icons-material';
 import { AddMedicationButton, ContentContainer, HorizontalRule, ImportMedicationButton, ListItemText, MainContainer, MedicationButtonsContainer, MedicationList, PrintFloatingButton, SaveAsTemplateContainer, SectionContainer, Title } from './styles';
 import { ImportMedicationModal } from '../../../components/import-medication-modal';
@@ -53,14 +53,31 @@ export const CreatePrescriptionScreen: React.FC = () => {
                 <li key={`section-${medication.id}`}>
                   <ul>
                     <ListSubheader>{`${index + 1}. ${medication.name}`}</ListSubheader>
-                    {Object.keys(medication).map((key) => {
-                      if (isMedicationKeyHidden(key)) return <></>;
-                      return <ListItem key={`item-${medication}-${key}`}>
-                        <ListItemText>
-                          <b>{medicationKeyTranslator(key)}</b>: {medication[key as keyof Medication]}
-                        </ListItemText>
-                      </ListItem>
-                    })}
+
+                      <TableContainer component={Paper}>
+                        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                          <TableHead>
+                            <TableRow>
+                            {Object.keys(medication).map((key) => {
+                              if (isMedicationKeyHidden(key)) return <></>;
+                              return <TableCell>{medicationKeyTranslator(key)}</TableCell>
+                            })}
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            <TableRow
+                              key={'asda'}
+                              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                            >
+                              {Object.keys(medication).map((key) => {
+                                if (isMedicationKeyHidden(key)) return <></>;
+                                return <TableCell align="left">{medication[key as keyof Medication]}</TableCell>
+                              })}
+                            </TableRow>
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    
                   </ul>
                 </li>
               )) :  <p>Importe ou adicione medicamentos</p>}
