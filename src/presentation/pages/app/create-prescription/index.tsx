@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 
 import Toolbar from '@mui/material/Toolbar';
 import { DashboardContainerComponent } from '../../../components/dashboard-container';
-import { Box, Button, List, ListItem, ListItemText, ListSubheader, Switch, TextField } from '@mui/material';
+import { Box, Button, Fab, List, ListItem, ListItemText, ListSubheader, Switch, TextField } from '@mui/material';
+import { Feed, Print } from '@mui/icons-material';
 
 export const CreatePrescriptionScreen: React.FC = () => {
   const [saveAsTemplate, setSaveAsTemplate] = useState<boolean>();
@@ -18,6 +19,18 @@ export const CreatePrescriptionScreen: React.FC = () => {
         justifyContent: 'center',
         alignItems: 'center',
       }}>
+        <Fab 
+          color="primary" 
+          aria-label="add" 
+          sx={{
+            position: 'fixed', 
+            right: '0', 
+            bottom: '0', 
+            margin: '2.4rem'
+          }}
+        >
+          <Print />
+        </Fab>
         <Box sx={{width: '70%'}}>
           <Box sx={{backgroundColor: ''}}>
             <h2>Dados do Paciente</h2>
