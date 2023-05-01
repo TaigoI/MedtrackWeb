@@ -2,17 +2,22 @@ import React, { useState } from 'react';
 
 import Toolbar from '@mui/material/Toolbar';
 import { DashboardContainerComponent } from '../../../components/dashboard-container';
-import { Box, ListItem, ListItemText, ListSubheader, Switch, TextField } from '@mui/material';
+import { Box, ListItem, ListItemText, ListSubheader, Modal, Switch, TextField, Typography } from '@mui/material';
 import { Print } from '@mui/icons-material';
 import { AddMedicationButton, ContentContainer, HorizontalRule, ImportMedicationButton, MainContainer, MedicationButtonsContainer, MedicationList, PrintFloatingButton, SaveAsTemplateContainer, SectionContainer, Title } from './styles';
+import { ImportMedicationModal } from '../../../components/import-medication-modal';
 
 export const CreatePrescriptionScreen: React.FC = () => {
   const [saveAsTemplate, setSaveAsTemplate] = useState<boolean>();
-
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  
   return (
     <DashboardContainerComponent appBar={{
       title: 'Nova Receita'
     }}>
+      <ImportMedicationModal isOpen={open} handleClose={handleClose} />
       <Toolbar />
       <MainContainer>
         <PrintFloatingButton>
@@ -42,7 +47,7 @@ export const CreatePrescriptionScreen: React.FC = () => {
               ))}
             </MedicationList>
             <MedicationButtonsContainer>
-              <ImportMedicationButton>Importar</ImportMedicationButton>
+              <ImportMedicationButton onClick={handleOpen}>Importar</ImportMedicationButton>
               <AddMedicationButton>Adicionar</AddMedicationButton>
             </MedicationButtonsContainer>
           </SectionContainer>
