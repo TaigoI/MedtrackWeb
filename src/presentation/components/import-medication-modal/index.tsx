@@ -1,29 +1,46 @@
-import { Modal, Typography, Checkbox, IconButton, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
-import React from 'react';
+import { Modal, Typography, Checkbox, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import React, { useState } from 'react';
 import { ContentContainer, ImportMedicationButton, MedicationList } from './styles';
+import { Medication } from '../../../modules/medications/entities/Medication';
+import { UIMedication } from '../../../modules/medications/entities/UIMedication';
+import { ValidUIMedicationsMock } from '../../../modules/medications/mocks/valid-ui-medications';
+import { v4 } from 'uuid';
 
 export interface IImportMedicationModalComponentProps {
   isOpen: boolean;
   handleClose: () => void;
+  handleImport: (medications: Medication[]) => void;
 }
 
 export const ImportMedicationModal: React.FC<IImportMedicationModalComponentProps> = ({
+  handleImport,
   handleClose,
   isOpen 
 }) => {
-  const [checked, setChecked] = React.useState([0]);
+  const [medications, setMedications] = useState<UIMedication[]>(ValidUIMedicationsMock);
 
-  const handleToggle = (value: number) => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
+  const handleToggle = (medication: UIMedication) => () => {
+    setMedications(medications.map(_medication => {
+      if (_medication.id === medication.id) {
+        return {
+          ..._medication,
+          checked: !_medication.checked
+        }
+      }
+      return _medication;
+    }))
+  };
 
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-
-    setChecked(newChecked);
+  const handleInternalImport = () => {
+    handleImport(medications.filter(_medication => _medication.checked));
+    setMedications(medications.map(_medication => {
+      return {
+        ..._medication,
+        checked: false,
+        id: v4()
+      }
+    }))
+    handleClose();
   };
 
   return (
@@ -38,30 +55,33 @@ export const ImportMedicationModal: React.FC<IImportMedicationModalComponentProp
           Importar medicamentos
         </Typography>
         <MedicationList>
-          {[0, 1, 2, 3, 4, 5, 6].map((value) => {
-            const labelId = `checkbox-list-label-${value}`;
+          {medications.map((medication) => {
+            const labelId = `checkbox-list-label-${medication.id}`;
             return (
               <ListItem
-                key={value}
+                key={medication.id}
                 disablePadding
               >
-                <ListItemButton role={undefined} onClick={handleToggle(value)} dense>
+                <ListItemButton role={undefined} onClick={handleToggle(medication)} dense>
                   <ListItemIcon>
                     <Checkbox
                       edge="start"
-                      checked={checked.indexOf(value) !== -1}
+                      checked={medication.checked}
+                      onChange={() => {
+                        handleToggle(medication)
+                      }}
                       tabIndex={-1}
                       disableRipple
                       inputProps={{ 'aria-labelledby': labelId }}
                     />
                   </ListItemIcon>
-                  <ListItemText id={labelId} primary={`Line item ${value + 1}`} />
+                  <ListItemText id={labelId} primary={`${medication.name}  ${medication.doseUnit} | ${medication.doseAmount} a cada ${medication.frequencyInMinutes / 60} horas | ${medication.usageDurationInDays} dia${medication.usageDurationInDays > 1 ? 's' : ''}`} />
                 </ListItemButton>
               </ListItem>
             );
           })}
         </MedicationList>
-        <ImportMedicationButton onClick={handleClose}>Importar</ImportMedicationButton>
+        <ImportMedicationButton onClick={handleInternalImport}>Importar</ImportMedicationButton>
       </ContentContainer>
     </Modal>
   );

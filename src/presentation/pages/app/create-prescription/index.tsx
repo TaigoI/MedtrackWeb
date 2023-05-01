@@ -2,22 +2,38 @@ import React, { useState } from 'react';
 
 import Toolbar from '@mui/material/Toolbar';
 import { DashboardContainerComponent } from '../../../components/dashboard-container';
-import { Box, ListItem, ListItemText, ListSubheader, Modal, Switch, TextField, Typography } from '@mui/material';
+import { Box, ListItem, ListSubheader, Switch, TextField } from '@mui/material';
 import { Print } from '@mui/icons-material';
-import { AddMedicationButton, ContentContainer, HorizontalRule, ImportMedicationButton, MainContainer, MedicationButtonsContainer, MedicationList, PrintFloatingButton, SaveAsTemplateContainer, SectionContainer, Title } from './styles';
+import { AddMedicationButton, ContentContainer, HorizontalRule, ImportMedicationButton, ListItemText, MainContainer, MedicationButtonsContainer, MedicationList, PrintFloatingButton, SaveAsTemplateContainer, SectionContainer, Title } from './styles';
 import { ImportMedicationModal } from '../../../components/import-medication-modal';
+import { Medication } from '../../../../modules/medications/entities/Medication';
+import { isMedicationKeyHidden, medicationKeyTranslator } from './data';
 
 export const CreatePrescriptionScreen: React.FC = () => {
   const [saveAsTemplate, setSaveAsTemplate] = useState<boolean>();
   const [open, setOpen] = React.useState(false);
+  const [medications, setMedications] = useState<Medication[]>([]);
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  
+
+  const handleImport = (_medications: Medication[]) => {
+    setMedications([
+      ...medications,
+      ..._medications
+    ]);
+  }
+
+
   return (
     <DashboardContainerComponent appBar={{
       title: 'Nova Receita'
     }}>
-      <ImportMedicationModal isOpen={open} handleClose={handleClose} />
+      <ImportMedicationModal 
+        isOpen={open} 
+        handleClose={handleClose} 
+        handleImport={handleImport}
+      />
       <Toolbar />
       <MainContainer>
         <PrintFloatingButton>
@@ -33,18 +49,21 @@ export const CreatePrescriptionScreen: React.FC = () => {
             <Title>Medicamentos</Title>
             <HorizontalRule/>
             <MedicationList>
-              {[0, 1, 2, 3, 4].map((sectionId) => (
-                <li key={`section-${sectionId}`}>
+              {medications.length > 0 ? medications.map((medication, index) => (
+                <li key={`section-${medication.id}`}>
                   <ul>
-                    <ListSubheader>{`I'm sticky ${sectionId}`}</ListSubheader>
-                    {[0, 1, 2].map((item) => (
-                      <ListItem key={`item-${sectionId}-${item}`}>
-                        <ListItemText primary={`Item ${item}`} />
+                    <ListSubheader>{`${index + 1}. ${medication.name}`}</ListSubheader>
+                    {Object.keys(medication).map((key) => {
+                      if (isMedicationKeyHidden(key)) return <></>;
+                      return <ListItem key={`item-${medication}-${key}`}>
+                        <ListItemText>
+                          <b>{medicationKeyTranslator(key)}</b>: {medication[key as keyof Medication]}
+                        </ListItemText>
                       </ListItem>
-                    ))}
+                    })}
                   </ul>
                 </li>
-              ))}
+              )) :  <p>Importe ou adicione medicamentos</p>}
             </MedicationList>
             <MedicationButtonsContainer>
               <ImportMedicationButton onClick={handleOpen}>Importar</ImportMedicationButton>

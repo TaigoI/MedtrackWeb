@@ -67,3 +67,8 @@ export const SaveAsTemplateContainer = styled(Box)`
   align-items: center;
   margin-bottom: 1.2rem;
 `;
+
+export const ListItemText = styled.p`
+  margin: 0;
+  font-size: 1rem;
+`;
