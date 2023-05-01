@@ -5,6 +5,7 @@ import { Medication } from '../../../modules/medications/entities/Medication';
 import { ValidMedicationsMock } from '../../../modules/medications/mocks/valid-medications';
 import { CalendarToday, MedicalInformation, MedicationOutlined, Title, Update } from '@mui/icons-material';
 import { v4 } from 'uuid';
+import { Controller, useForm } from 'react-hook-form';
 
 export interface IAddMedicationModalComponentProps {
   isOpen: boolean;
@@ -17,6 +18,7 @@ export const AddMedicationModal: React.FC<IAddMedicationModalComponentProps> = (
   handleClose,
   isOpen 
 }) => {
+  const { handleSubmit, control } = useForm();
   const handleInternalAdd = () => {
     handleAdd({
       ...ValidMedicationsMock[0],
@@ -36,16 +38,30 @@ export const AddMedicationModal: React.FC<IAddMedicationModalComponentProps> = (
         <Typography id="modal-modal-title" variant="h6" component="h2">
           Adicionar medicamento
         </Typography>
-        <MedicationField 
-          label={'Nome'}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Title />
-              </InputAdornment>
-            ),
-          }}
+        <Controller
+          control={control}
+          name="name"
+          render={({ field: { onChange, onBlur, value, ref } }) => (
+            <MedicationField 
+              label={'Nome'}
+              value={value}
+              onChange={onChange}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Title />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          )}
         />
+        
+
+        <Controller
+          control={control}
+          name="doseUnit"
+          render={({ field: { onChange, onBlur, value, ref } }) => (
         <MedicationField 
           label={'Dosagem'}
           InputProps={{
@@ -55,7 +71,12 @@ export const AddMedicationModal: React.FC<IAddMedicationModalComponentProps> = (
               </InputAdornment>
             ),
           }}
-        />
+        />)} />
+
+        <Controller
+          control={control}
+          name="doseAmount"
+          render={({ field: { onChange, onBlur, value, ref } }) => (
         <MedicationField 
           label={'Dose'}
           InputProps={{
@@ -65,7 +86,12 @@ export const AddMedicationModal: React.FC<IAddMedicationModalComponentProps> = (
               </InputAdornment>
             ),
           }}
-        />
+        />)}/>
+
+        <Controller
+          control={control}
+          name="frequencyInMinutes"
+          render={({ field: { onChange, onBlur, value, ref } }) => (
         <MedicationField 
           label={'A cada'}
           InputProps={{
@@ -75,7 +101,12 @@ export const AddMedicationModal: React.FC<IAddMedicationModalComponentProps> = (
               </InputAdornment>
             ),
           }}
-        />
+        />)}/>
+
+        <Controller
+          control={control}
+          name="usageDurationInDays"
+          render={({ field: { onChange, onBlur, value, ref } }) => (
         <MedicationField 
           label={'Por'}
           InputProps={{
@@ -85,7 +116,7 @@ export const AddMedicationModal: React.FC<IAddMedicationModalComponentProps> = (
               </InputAdornment>
             ),
           }}
-        />
+        />)}/>
         <AddMedicationButton onClick={handleInternalAdd}>Adicionar</AddMedicationButton>
       </ContentContainer>
     </Modal>
