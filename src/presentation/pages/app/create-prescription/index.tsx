@@ -9,16 +9,20 @@ import { ImportMedicationModal } from '../../../components/import-medication-mod
 import { Medication } from '../../../../modules/medications/entities/Medication';
 import { isMedicationKeyHidden, medicationKeyTranslator } from './data';
 import { toast } from 'react-toastify';
+import { AddMedicationModal } from '../../../components/add-medication-modal';
 
 export const CreatePrescriptionScreen: React.FC = () => {
   const [saveAsTemplate, setSaveAsTemplate] = useState<boolean>();
-  const [open, setOpen] = React.useState(false);
+  const [isImportationOpen, setImportationOpen] = React.useState(false);
+  const [isAdditionOpen, setAdditionOpen] = React.useState(false);
   const [medications, setMedications] = useState<Medication[]>([]);
   const [patientName, setPatientName] = useState('');
   const [patientNameError, setPatientNameError] = useState<string>();
 
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleOpenImportation = () => setImportationOpen(true);
+  const handleCloseImportation = () => setImportationOpen(false);
+  const handleOpenAddition = () => setAdditionOpen(true);
+  const handleCloseAddition = () => setAdditionOpen(false);
 
 
   function handleError(errorMessage: string) {
@@ -53,14 +57,26 @@ export const CreatePrescriptionScreen: React.FC = () => {
     ]);
   }
 
+  const handleAddMedication = (medication: Medication) => {
+    setMedications([
+      ...medications,
+      medication
+    ]);
+  }
+
   return (
     <DashboardContainerComponent appBar={{
       title: 'Nova Receita'
     }}>
       <ImportMedicationModal 
-        isOpen={open} 
-        handleClose={handleClose} 
+        isOpen={isImportationOpen} 
+        handleClose={handleCloseImportation} 
         handleImport={handleImport}
+      />
+      <AddMedicationModal 
+        isOpen={isAdditionOpen} 
+        handleAdd={handleAddMedication}
+        handleClose={handleCloseAddition}
       />
       <Toolbar />
       <MainContainer>
@@ -115,8 +131,8 @@ export const CreatePrescriptionScreen: React.FC = () => {
               )) :  <p>Importe ou adicione medicamentos</p>}
             </MedicationList>
             <MedicationButtonsContainer>
-              <ImportMedicationButton onClick={handleOpen}>Importar</ImportMedicationButton>
-              <AddMedicationButton>Adicionar</AddMedicationButton>
+              <ImportMedicationButton onClick={handleOpenImportation}>Importar</ImportMedicationButton>
+              <AddMedicationButton onClick={handleOpenAddition}>Adicionar</AddMedicationButton>
             </MedicationButtonsContainer>
           </SectionContainer>
           <SectionContainer>
