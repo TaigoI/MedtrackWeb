@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 
 import Toolbar from '@mui/material/Toolbar';
 import { DashboardContainerComponent } from '../../../components/dashboard-container';
-import { Box, Button, Fab, List, ListItem, ListItemText, ListSubheader, Switch, TextField } from '@mui/material';
-import { Feed, Print } from '@mui/icons-material';
+import { Box, ListItem, ListItemText, ListSubheader, Switch, TextField } from '@mui/material';
+import { Print } from '@mui/icons-material';
+import { AddMedicationButton, ContentContainer, HorizontalRule, ImportMedicationButton, MainContainer, MedicationButtonsContainer, MedicationList, PrintFloatingButton, SaveAsTemplateContainer, SectionContainer, Title } from './styles';
 
 export const CreatePrescriptionScreen: React.FC = () => {
   const [saveAsTemplate, setSaveAsTemplate] = useState<boolean>();
@@ -13,75 +14,49 @@ export const CreatePrescriptionScreen: React.FC = () => {
       title: 'Nova Receita'
     }}>
       <Toolbar />
-      <Box sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}>
-        <Fab 
-          color="primary" 
-          aria-label="add" 
-          sx={{
-            position: 'fixed', 
-            right: '0', 
-            bottom: '0', 
-            margin: '2.4rem'
-          }}
-        >
+      <MainContainer>
+        <PrintFloatingButton>
           <Print />
-        </Fab>
-        <Box sx={{width: '70%'}}>
-          <Box sx={{backgroundColor: ''}}>
-            <h2>Dados do Paciente</h2>
-            <hr style={{marginBottom: '1.6rem'}} />
+        </PrintFloatingButton>
+        <ContentContainer>
+          <Box>
+            <Title>Dados do Paciente</Title>
+            <HorizontalRule />
             <TextField label='Nome' />
           </Box>
-          <Box sx={{backgroundColor: ''}}>
-            <h2>Medicamentos</h2>
-            <hr style={{marginBottom: '1.6rem'}}/>
-            <Box sx={{width: '100%', backgroundColor: ''}}>
-              <List
-                sx={{
-                  width: '100%',
-                  bgcolor: 'background.paper',
-                  position: 'relative',
-                  overflow: 'auto',
-                  maxHeight: 300,
-                  '& ul': { padding: 0 },
-                }}
-                subheader={<li />}
-              >
-                {[0, 1, 2, 3, 4].map((sectionId) => (
-                  <li key={`section-${sectionId}`}>
-                    <ul>
-                      <ListSubheader>{`I'm sticky ${sectionId}`}</ListSubheader>
-                      {[0, 1, 2].map((item) => (
-                        <ListItem key={`item-${sectionId}-${item}`}>
-                          <ListItemText primary={`Item ${item}`} />
-                        </ListItem>
-                      ))}
-                    </ul>
-                  </li>
-                ))}
-              </List>
-              <Box sx={{marginTop: '1.6rem'}}>
-                <Button variant='contained'>Importar</Button>
-                <Button variant='outlined'>Adicionar</Button>
-              </Box>
-            </Box>
-          </Box>
-          <Box>
-            <h2>Modelo</h2>
-            <hr style={{marginBottom: '1.6rem'}} />
-            <Box sx={{display: 'flex', alignItems: 'center', marginBottom: '1.2rem'}}>
+          <SectionContainer>
+            <Title>Medicamentos</Title>
+            <HorizontalRule/>
+            <MedicationList>
+              {[0, 1, 2, 3, 4].map((sectionId) => (
+                <li key={`section-${sectionId}`}>
+                  <ul>
+                    <ListSubheader>{`I'm sticky ${sectionId}`}</ListSubheader>
+                    {[0, 1, 2].map((item) => (
+                      <ListItem key={`item-${sectionId}-${item}`}>
+                        <ListItemText primary={`Item ${item}`} />
+                      </ListItem>
+                    ))}
+                  </ul>
+                </li>
+              ))}
+            </MedicationList>
+            <MedicationButtonsContainer>
+              <ImportMedicationButton>Importar</ImportMedicationButton>
+              <AddMedicationButton>Adicionar</AddMedicationButton>
+            </MedicationButtonsContainer>
+          </SectionContainer>
+          <SectionContainer>
+            <Title>Modelo</Title>
+            <HorizontalRule />
+            <SaveAsTemplateContainer>
               <p>Salvar como Modelo</p>
               <Switch defaultChecked={false} value={saveAsTemplate} onChange={e => setSaveAsTemplate(e.target.checked)} />
-            </Box>
+            </SaveAsTemplateContainer>
             <TextField label='Descrição do modelo' disabled={!saveAsTemplate} />
-          </Box>
-        </Box>
-      </Box> 
+          </SectionContainer>
+        </ContentContainer>
+      </MainContainer> 
     </DashboardContainerComponent>
   );
 };
