@@ -8,14 +8,43 @@ import { AddMedicationButton, ContentContainer, HorizontalRule, ImportMedication
 import { ImportMedicationModal } from '../../../components/import-medication-modal';
 import { Medication } from '../../../../modules/medications/entities/Medication';
 import { isMedicationKeyHidden, medicationKeyTranslator } from './data';
+import { toast } from 'react-toastify';
 
 export const CreatePrescriptionScreen: React.FC = () => {
   const [saveAsTemplate, setSaveAsTemplate] = useState<boolean>();
   const [open, setOpen] = React.useState(false);
   const [medications, setMedications] = useState<Medication[]>([]);
+  const [patientName, setPatientName] = useState('');
+  const [patientNameError, setPatientNameError] = useState<string>();
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+
+  function handleError(errorMessage: string) {
+    toast.error(errorMessage, {
+      theme: 'colored'
+    });
+  }
+
+  function handleSuccess() {
+    toast.success(`Receita criada com sucesso!`, {
+      theme: 'colored'
+    });
+  }
+
+  function handlePrint() {
+    if (!patientName) {
+      setPatientNameError('Nome é obrigatório');
+      return;
+    } 
+    setPatientNameError(undefined);
+    if (medications.length === 0) {
+      handleError('Adicione algum medicamento!');
+      return;
+    }
+    handleSuccess();
+  }
 
   const handleImport = (_medications: Medication[]) => {
     setMedications([
@@ -23,7 +52,6 @@ export const CreatePrescriptionScreen: React.FC = () => {
       ..._medications
     ]);
   }
-
 
   return (
     <DashboardContainerComponent appBar={{
@@ -36,14 +64,19 @@ export const CreatePrescriptionScreen: React.FC = () => {
       />
       <Toolbar />
       <MainContainer>
-        <PrintFloatingButton>
+        <PrintFloatingButton onClick={handlePrint}>
           <Print />
         </PrintFloatingButton>
         <ContentContainer>
           <Box>
             <Title>Dados do Paciente</Title>
             <HorizontalRule />
-            <TextField label='Nome' />
+            <TextField 
+              label={patientNameError || 'Nome'}
+              value={patientName} 
+              onChange={e => setPatientName(e.target.value)} 
+              error={!!patientNameError}  
+            />
           </Box>
           <SectionContainer>
             <Title>Medicamentos</Title>
