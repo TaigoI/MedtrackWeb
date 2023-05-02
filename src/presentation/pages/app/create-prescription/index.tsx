@@ -10,6 +10,7 @@ import { Medication } from '../../../../modules/medications/entities/Medication'
 import { isMedicationKeyHidden, medicationKeyTranslator } from './data';
 import { toast } from 'react-toastify';
 import { AddMedicationModal } from '../../../components/add-medication-modal';
+import { ValidMedicationsMock } from '../../../../modules/medications/mocks/valid-medications';
 
 export const CreatePrescriptionScreen: React.FC = () => {
   const [saveAsTemplate, setSaveAsTemplate] = useState<boolean>();
@@ -58,6 +59,7 @@ export const CreatePrescriptionScreen: React.FC = () => {
   }
 
   const handleAddMedication = (medication: Medication) => {
+    ValidMedicationsMock.push(medication)
     setMedications([
       ...medications,
       medication

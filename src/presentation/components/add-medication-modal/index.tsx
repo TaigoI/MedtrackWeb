@@ -1,11 +1,15 @@
 import { InputAdornment, Modal, TextField, Typography } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ContentContainer, AddMedicationButton, MedicationList, MedicationField } from './styles';
+import { yupResolver } from '@hookform/resolvers/yup'
+
 import { Medication } from '../../../modules/medications/entities/Medication';
 import { ValidMedicationsMock } from '../../../modules/medications/mocks/valid-medications';
 import { CalendarToday, MedicalInformation, MedicationOutlined, Title, Update } from '@mui/icons-material';
 import { v4 } from 'uuid';
 import { Controller, useForm } from 'react-hook-form';
+import { yupSchema } from './data';
+import { IFormValues } from './props';
 
 export interface IAddMedicationModalComponentProps {
   isOpen: boolean;
@@ -18,10 +22,23 @@ export const AddMedicationModal: React.FC<IAddMedicationModalComponentProps> = (
   handleClose,
   isOpen 
 }) => {
-  const { handleSubmit, control } = useForm();
-  const handleInternalAdd = () => {
+  const { handleSubmit, control, formState: {errors} } = useForm<IFormValues>({
+    resolver: yupResolver(yupSchema),
+    defaultValues: {
+      doseAmount: 0,
+      doseUnit: '',
+      frequencyInMinutes: 0,
+      name: '', 
+      usageDurationInDays: 0
+    }
+  });
+  
+  useEffect(() => console.log(errors), [errors])
+
+  const handleInternalAdd = (data: IFormValues) => {
+    console.log(data)
     handleAdd({
-      ...ValidMedicationsMock[0],
+      ...data,
       id: v4()
     })
     handleClose();
@@ -43,9 +60,12 @@ export const AddMedicationModal: React.FC<IAddMedicationModalComponentProps> = (
           name="name"
           render={({ field: { onChange, onBlur, value, ref } }) => (
             <MedicationField 
-              label={'Nome'}
-              value={value}
+              name='name'
               onChange={onChange}
+              value={value} 
+              error={!!errors.name?.message}
+              helperText={errors.name?.message}
+              label={'Nome'}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -63,6 +83,10 @@ export const AddMedicationModal: React.FC<IAddMedicationModalComponentProps> = (
           name="doseUnit"
           render={({ field: { onChange, onBlur, value, ref } }) => (
         <MedicationField 
+          onChange={onChange}
+          value={value}
+          error={!!errors.doseUnit?.message}
+          helperText={errors.doseUnit?.message}
           label={'Dosagem'}
           InputProps={{
             startAdornment: (
@@ -78,6 +102,10 @@ export const AddMedicationModal: React.FC<IAddMedicationModalComponentProps> = (
           name="doseAmount"
           render={({ field: { onChange, onBlur, value, ref } }) => (
         <MedicationField 
+          onChange={onChange}
+          value={value} 
+          error={!!errors.doseAmount?.message}
+          helperText={errors.doseAmount?.message}
           label={'Dose'}
           InputProps={{
             startAdornment: (
@@ -93,6 +121,10 @@ export const AddMedicationModal: React.FC<IAddMedicationModalComponentProps> = (
           name="frequencyInMinutes"
           render={({ field: { onChange, onBlur, value, ref } }) => (
         <MedicationField 
+          onChange={onChange}
+          value={value} 
+          error={!!errors.frequencyInMinutes?.message}
+          helperText={errors.frequencyInMinutes?.message}
           label={'A cada'}
           InputProps={{
             startAdornment: (
@@ -108,6 +140,10 @@ export const AddMedicationModal: React.FC<IAddMedicationModalComponentProps> = (
           name="usageDurationInDays"
           render={({ field: { onChange, onBlur, value, ref } }) => (
         <MedicationField 
+          onChange={onChange}
+          value={value} 
+          error={!!errors.usageDurationInDays?.message}
+          helperText={errors.usageDurationInDays?.message}
           label={'Por'}
           InputProps={{
             startAdornment: (
@@ -117,7 +153,7 @@ export const AddMedicationModal: React.FC<IAddMedicationModalComponentProps> = (
             ),
           }}
         />)}/>
-        <AddMedicationButton onClick={handleInternalAdd}>Adicionar</AddMedicationButton>
+        <AddMedicationButton onClick={handleSubmit(handleInternalAdd)}>Adicionar</AddMedicationButton>
       </ContentContainer>
     </Modal>
   );
