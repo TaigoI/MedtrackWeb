@@ -22,7 +22,7 @@ export const AddMedicationModal: React.FC<IAddMedicationModalComponentProps> = (
   handleClose,
   isOpen 
 }) => {
-  const { handleSubmit, control, formState: {errors} } = useForm<IFormValues>({
+  const { handleSubmit, control, reset, formState: {errors} } = useForm<IFormValues>({
     resolver: yupResolver(yupSchema),
     defaultValues: {
       doseAmount: 0,
@@ -42,6 +42,7 @@ export const AddMedicationModal: React.FC<IAddMedicationModalComponentProps> = (
       id: v4()
     })
     handleClose();
+    reset();
   };
 
   return (
