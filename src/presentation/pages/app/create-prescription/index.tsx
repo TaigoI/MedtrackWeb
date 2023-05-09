@@ -11,13 +11,22 @@ import { isMedicationKeyHidden, medicationKeyTranslator } from './data';
 import { toast } from 'react-toastify';
 import { AddMedicationModal } from '../../../components/add-medication-modal';
 import { ValidMedicationsMock } from '../../../../modules/medications/mocks/valid-medications';
+import ReactPDF from '@react-pdf/renderer';
+import { PrescriptionTemplate } from '../../../templates/prescription';
+import { useNavigate } from 'react-router-dom';
+import { useMedication } from '../../../context/MedicationContext';
 
 export const CreatePrescriptionScreen: React.FC = () => {
   const [saveAsTemplate, setSaveAsTemplate] = useState<boolean>();
   const [isImportationOpen, setImportationOpen] = React.useState(false);
   const [isAdditionOpen, setAdditionOpen] = React.useState(false);
-  const [medications, setMedications] = useState<Medication[]>([]);
-  const [patientName, setPatientName] = useState('');
+  const {
+    medications,
+    patientName,
+    setMedications,
+    setPatientName
+  } = useMedication();
+
   const [patientNameError, setPatientNameError] = useState<string>();
 
   const handleOpenImportation = () => setImportationOpen(true);
@@ -25,6 +34,7 @@ export const CreatePrescriptionScreen: React.FC = () => {
   const handleOpenAddition = () => setAdditionOpen(true);
   const handleCloseAddition = () => setAdditionOpen(false);
 
+  const navigate = useNavigate();
 
   function handleError(errorMessage: string) {
     toast.error(errorMessage, {
@@ -32,10 +42,11 @@ export const CreatePrescriptionScreen: React.FC = () => {
     });
   }
 
-  function handleSuccess() {
+  async function handleSuccess() {
     toast.success(`Receita criada com sucesso!`, {
       theme: 'colored'
     });
+    navigate('/app/receita/pdf', {patientName, medications} as unknown as never);
   }
 
   function handlePrint() {
