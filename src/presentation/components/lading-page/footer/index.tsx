@@ -1,16 +1,16 @@
-import { Box, Typography, Link } from '@mui/material';
-import { styles } from './styles';
+import { Typography, Link } from '@mui/material';
+import { FooterContainer, Text } from './styles';
 
 export const Footer = () => {
   return (
-    <Box sx={styles.footerContainer}>
-      <Typography sx={styles.footerText}>
+    <FooterContainer >
+      <Text>
         Feito por {' '}
         <Link href="https://github.com/TaigoI/MedtrackWeb" target="_blank" underline="none">
           PDS - Grupo 3
         </Link>
-      </Typography>
-      <Typography sx={styles.footerDate}>Buit with MUI</Typography>
-    </Box>
+      </Text>
+      <Typography sx={{opacity: '0.4'}}>2023 - Buit with MUI</Typography>
+    </FooterContainer>
   );
 };

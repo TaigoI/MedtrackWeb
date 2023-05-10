@@ -1,9 +1,11 @@
 import React from 'react';
-import { Grid, Typography, Box } from '@mui/material';
+import { Typography } from '@mui/material';
 import BoltIcon from '@mui/icons-material/Bolt';
 import MedicationLiquidIcon from '@mui/icons-material/MedicationLiquid';
 import MobileFriendlyIcon from '@mui/icons-material/MobileFriendly';
-import { styles } from './styles';
+import { SectionGridContainer, SectionGridItem, SectionBox } from './styles';
+import { SvgIconComponent } from '@mui/icons-material';
+import styled from 'styled-components';
 
 export const Section = () => {
 
@@ -27,22 +29,20 @@ export const Section = () => {
     },
   ];
   return (
-    <Box sx={{ flexGrow: 1, minHeight: '400px' }}>
-      <Grid container sx={styles.sectionGridContainer}>
+    <SectionBox>
+      <SectionGridContainer>
         {sectionItems.map((item) => (
-          <Grid
-            item
+          <SectionGridItem
             xs={12}
             md={3.5}
             minHeight={300}
             key={item.id}
-            sx={styles.sectionGridItem}
           >
             {item.icon}
             <Typography variant='h6' >{item.sentence}</Typography>
-          </Grid>
+          </SectionGridItem>
         ))}
-      </Grid>
-    </Box>
+      </SectionGridContainer>
+    </SectionBox>
   );
 };

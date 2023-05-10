@@ -1,5 +1,8 @@
-export const styles = {
-  footerContainer: {
+import { Box, Typography } from '@mui/material';
+import styled from 'styled-components';
+
+export const FooterContainer = styled(Box).attrs({
+  sx: {
     display: 'flex',
     alignItems: 'center',
     miHeight: '10vh',
@@ -8,13 +11,11 @@ export const styles = {
     backgroundColor: '#f2f0f1',
     flexDirection: 'column',
     flexGrow: 1
-  },
+  }
+})``;
 
-  footerText: {
+export const Text = styled(Typography).attrs({
+  sx: {
     paddingBottom: '10px',
-  },
-
-  footerDate: {
-    opacity: '0.4',
-  },
-}
+  }
+})``;

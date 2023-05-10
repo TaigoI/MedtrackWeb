@@ -19,13 +19,12 @@ const theme = createTheme({
 
 export const LandingPage: React.FC = () => (
   <ThemeProvider theme={theme}>
-    <LandingPageHeader />
-    <Hero />
-    <Section />
-    <AboutUs />
-    <Testimonial />
-    <ContactUs />
-    <Footer />
-    <a href="/app">Go to app</a>
+      <LandingPageHeader />
+      <Hero />
+      <Section />
+      <AboutUs />
+      <Testimonial />
+      <ContactUs />
+      <Footer />
   </ThemeProvider>
 );

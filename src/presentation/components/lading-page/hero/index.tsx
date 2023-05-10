@@ -1,7 +1,20 @@
 import React from 'react';
-import { Grid, Typography, Button, Box, useMediaQuery } from '@mui/material';
+import {
+  Grid,
+  Typography,
+  Button,
+  useMediaQuery,
+  Link
+} from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { styles, LargeImg, LargeImgMobile } from './styles'
+import {
+  LargeImg,
+  LargeImgMobile,
+  HeroBox,
+  GridContainer,
+  Title,
+  Subtitle
+} from './styles'
 import ImgConsulta from '../../../../assets/images/consulta.jpeg';
 
 export const Hero = () => {
@@ -10,32 +23,34 @@ export const Hero = () => {
   const matches = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
-    <Box sx={styles.heroBox}>
-      <Grid container spacing={6} sx={styles.gridContainer}>
+    <HeroBox>
+      <GridContainer spacing={6}>
         <Grid item xs={12} md={7}>
-          <Typography variant="h3" fontWeight={700} sx={styles.title}>
-              Consultas mais eficientes e remédios na hora certa
-          </Typography>
-          <Typography variant="h6" sx={styles.subtitle}>
-              Com o Medtrack, médicos podem prescrever receitas com mais agilidade por meio
-              do nosso sistema de receitas favoritas: a escolha dos remédios e a impressão
-              está a poucos cliques de distância! 
-          </Typography>
-          <Button
+          <Title fontWeight={700}>
+            Consultas mais eficientes e remédios na hora certa
+          </Title>
+          <Subtitle>
+            Com o Medtrack, médicos podem prescrever receitas com mais agilidade por meio
+            do nosso sistema de receitas favoritas: a escolha dos remédios e a impressão
+            está a poucos cliques de distância!
+          </Subtitle>
+          <Link href='/app' target='_blank' color='#FFF' underline='none'>
+            <Button
               variant="contained"
               color="primary"
               sx={{ width: '200px', fontSize: '16px' }}
-          >
-              COMECE IMEDIATAMENTE
-          </Button>
+            >
+              COMECE
+            </Button>
+          </Link>
         </Grid>
         <Grid item xs={12} md={5}>
           {
             matches ? <LargeImgMobile src={ImgConsulta} alt='Consulta médica' /> :
-            <LargeImg src={ImgConsulta} alt="Consulta médica"/>
+              <LargeImg src={ImgConsulta} alt="Consulta médica" />
           }
         </Grid>
-      </Grid>
-    </Box>
+      </GridContainer>
+    </HeroBox>
   );
 };

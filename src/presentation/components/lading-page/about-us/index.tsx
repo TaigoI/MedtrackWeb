@@ -1,64 +1,43 @@
-import React from 'react';
-import { Grid, Typography, Button, Box } from '@mui/material';
-import bestTeams from '../images/bestTeams.jpg';
-
-const classes = {
-    aboutUsContainer: {
-        width: '100%',
-        display: 'flex',
-        minHeight: '400px',
-        alignItems: 'center',
-        justifyContent: 'center',
-        margin: '30px 0px 50px 0px',
-      },
-      aboutUsSubtitle: {
-        opacity: '0.7',
-        paddingBottom: '30px',
-        fontSize: '18px',
-      },
-      largeImage: {
-        width: '100%',
-      },
-      gridContainer: {
-        display: 'flex',
-        alignItems: 'center',
-        maxWidth: '1300px',
-        padding: '50px',
-      },
-      title: {
-        paddingBottom: '15px',
-      },
-  
-}
+import { Grid, Typography, Button, Box, Link } from '@mui/material';
+import {  
+  LargeImg,
+  AboutUsContainer,
+  GridContainer,
+  Title,
+  Subtitle,
+} from './styles';
+import FrameApp from '../../../../assets/images/frame-app.png';
 
 export const AboutUs = () => {
-
   return (
-    <Box sx={classes.aboutUsContainer}>
-      <Grid container spacing={6} sx={classes.gridContainer}>
+    <AboutUsContainer >
+      <GridContainer spacing={6} >
         <Grid item xs={12} md={5}>
-          {/* <img src={bestTeams} alt="My Team" className={classes.largeImage} /> */}
+          <LargeImg src={FrameApp} alt="Medtrack App" />
         </Grid>
 
         <Grid item xs={12} md={6}>
-          <Typography variant="h3" fontWeight={700} sx={classes.title}>
-            We build, We revive
-          </Typography>
-          <Typography sx={classes.aboutUsSubtitle}>
-            Your business needs to be in safe hands at all times. We ensure you
-            never run out of customers and not run at loss. We are trusted by
-            over 500+ companies to deliver quality marketing campaigns using
-            Digital marketing & Offline marketing channels.
-          </Typography>
-          <Button
-            variant="contained"
-            color="primary"
-            sx={{ width: '200px', fontSize: '16px' }}
-          >
-            CONTACT US
-          </Button>
+          <Title variant="h3" fontWeight={700}>
+            Sua receita será seguida
+          </Title>
+          <Subtitle >
+            O seu trabalho continua com o paciente. Mas e se ele não conseguir
+            continuar o tratamento sozinho? Pensando nisso, oferecemos o aplicativo
+            móvel Medtrack, voltado para pacientes. O aplicativo integra as receitas
+            emitidas por meio desta plataforma e garante que os medicamentos
+            serão tomados devidamente através de um serviço de alarmes.
+          </Subtitle>
+          <Link underline='none' color='#FFF' target='_blank' href='https://github.com/TaigoI/MedtrackApp'>
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{ width: '200px', fontSize: '16px' }}
+            >
+              MedtrackApp
+            </Button>
+          </Link>
         </Grid>
-      </Grid>
-    </Box>
+      </GridContainer>
+    </AboutUsContainer>
   );
 };
