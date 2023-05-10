@@ -23,8 +23,8 @@ export const LandingPage: React.FC = () => (
       <Hero />
       <Section />
       <AboutUs />
-      <Testimonial />
-      <ContactUs />
+      {/* <Testimonial />
+      <ContactUs /> */}
       <Footer />
   </ThemeProvider>
 );

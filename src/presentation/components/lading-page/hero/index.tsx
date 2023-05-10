@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   Grid,
-  Typography,
   Button,
   useMediaQuery,
   Link
@@ -9,13 +8,12 @@ import {
 import { useTheme } from '@mui/material/styles';
 import {
   LargeImg,
-  LargeImgMobile,
   HeroBox,
   GridContainer,
   Title,
   Subtitle
 } from './styles'
-import ImgConsulta from '../../../../assets/images/consulta.jpeg';
+import ImgConsulta from '../../../../assets/images/consulta.png';
 
 export const Hero = () => {
 
@@ -45,10 +43,7 @@ export const Hero = () => {
           </Link>
         </Grid>
         <Grid item xs={12} md={5}>
-          {
-            matches ? <LargeImgMobile src={ImgConsulta} alt='Consulta médica' /> :
-              <LargeImg src={ImgConsulta} alt="Consulta médica" />
-          }
+          <LargeImg src={ImgConsulta} alt="Consulta médica" />
         </Grid>
       </GridContainer>
     </HeroBox>

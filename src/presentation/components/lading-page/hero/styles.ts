@@ -2,11 +2,6 @@ import { Box, Grid, Typography } from '@mui/material';
 import styled from 'styled-components'
 
 export const LargeImg = styled.img`
-  height: 120%;
-  width: 120%;
-`;
-
-export const LargeImgMobile = styled.img`
   height: 100%;
   width: 100%;
 `;
