@@ -9,13 +9,14 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import { MainRouter } from './presentation/routes';
+import { MedicationProvider } from './presentation/context/MedicationContext';
 
 function App() {
   return (
-    <>
+    <MedicationProvider>
       <ToastContainer />
       <RouterProvider router={MainRouter} />
-    </>
+    </MedicationProvider>
   );
 }
 
