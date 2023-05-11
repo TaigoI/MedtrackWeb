@@ -13,6 +13,6 @@ export class Medication {
     readonly doseUnit: string,
     readonly doseAmount: number,
     readonly frequencyInMinutes: number,
-    readonly usageDurationInDays: number
+    readonly usageDurationInDays: number,
   ){}
 }

@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useState } from 'react';
-import { Medication } from '../../modules/medications/entities/Medication';
+import { UIMedication } from '../../modules/medications/entities/UIMedication';
 
 interface Props {
-  medications: Medication[];
-  setMedications: (_: Medication[]) => void;
+  medications: UIMedication[];
+  setMedications: (_: UIMedication[]) => void;
   patientName: string;
   setPatientName: (_: string) => void;
 }
@@ -11,7 +11,7 @@ interface Props {
 const MedicationContext = createContext({} as Props);
 
 const MedicationProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
-  const [medications, setMedications] = useState<Medication[]>([]);
+  const [medications, setMedications] = useState<UIMedication[]>([]);
   const [patientName, setPatientName] = useState('');
 
   return (

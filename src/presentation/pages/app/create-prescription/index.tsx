@@ -15,6 +15,7 @@ import ReactPDF from '@react-pdf/renderer';
 import { PrescriptionTemplate } from '../../../templates/prescription';
 import { useNavigate } from 'react-router-dom';
 import { useMedication } from '../../../context/MedicationContext';
+import { UIMedication } from '../../../../modules/medications/entities/UIMedication';
 
 export const CreatePrescriptionScreen: React.FC = () => {
   const [saveAsTemplate, setSaveAsTemplate] = useState<boolean>();
@@ -65,7 +66,7 @@ export const CreatePrescriptionScreen: React.FC = () => {
   const handleImport = (_medications: Medication[]) => {
     setMedications([
       ...medications,
-      ..._medications
+      ...(_medications.map(medication => new UIMedication(medication.id, medication.name, medication.doseUnit, medication.doseAmount, medication.frequencyInMinutes, medication.usageDurationInDays)))
     ]);
   }
 
@@ -73,7 +74,7 @@ export const CreatePrescriptionScreen: React.FC = () => {
     ValidMedicationsMock.push(medication)
     setMedications([
       ...medications,
-      medication
+      new UIMedication(medication.id, medication.name, medication.doseUnit, medication.doseAmount, medication.frequencyInMinutes, medication.usageDurationInDays)
     ]);
   }
 
