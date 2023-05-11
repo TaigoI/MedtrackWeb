@@ -3,5 +3,7 @@ import { ValidMedicationsMock } from "./valid-medications";
 
 export const ValidUIMedicationsMock: UIMedication[] = ValidMedicationsMock.map(item => ({
   ...item,
-  checked: false
+  checked: false,
+  usageDurationInDaysToShow: `${item.usageDurationInDays} dias`,
+  frequencyInHours: ''
 }));
