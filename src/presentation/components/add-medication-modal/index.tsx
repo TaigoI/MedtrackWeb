@@ -4,17 +4,17 @@ import { ContentContainer, AddMedicationButton, MedicationList, MedicationField 
 import { yupResolver } from '@hookform/resolvers/yup'
 
 import { Medication } from '../../../modules/medications/entities/Medication';
-import { ValidMedicationsMock } from '../../../modules/medications/mocks/valid-medications';
 import { CalendarToday, MedicalInformation, MedicationOutlined, Title, Update } from '@mui/icons-material';
 import { v4 } from 'uuid';
 import { Controller, useForm } from 'react-hook-form';
 import { yupSchema } from './data';
 import { IFormValues } from './props';
+import { PrescriptionItem } from '../../../modules/prescriptions/entities/PrescriptionItem';
 
 export interface IAddMedicationModalComponentProps {
   isOpen: boolean;
   handleClose: () => void;
-  handleAdd: (medication: Medication) => void;
+  handleAdd: (medication: PrescriptionItem) => void;
 }
 
 export const AddMedicationModal: React.FC<IAddMedicationModalComponentProps> = ({
@@ -37,10 +37,10 @@ export const AddMedicationModal: React.FC<IAddMedicationModalComponentProps> = (
 
   const handleInternalAdd = (data: IFormValues) => {
     console.log(data)
-    handleAdd({
-      ...data,
-      id: v4()
-    })
+    // handleAdd({
+    //   ...data,
+    //   id: v4()
+    // })
     handleClose();
     reset();
   };

@@ -8,7 +8,5 @@ export class MedicationPresentationDosage {
     readonly medication: Medication,
     readonly presentation: Presentation,
     readonly dosage: Dosage,
-    readonly dosageAmount: string,
-    readonly dosageUnit: string,
   ) {}
 }

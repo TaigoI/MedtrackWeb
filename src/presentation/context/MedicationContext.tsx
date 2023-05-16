@@ -1,9 +1,11 @@
-import React, { createContext, useContext, useState } from 'react';
-import { UIMedication } from '../../modules/medications/entities/UIMedication';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { AxiosHttpClient } from '../../infra/http/AxiosHttpClient';
+import { Prescription } from '../../modules/prescriptions/entities/Prescription';
+import { findPrescriptionsUseCase } from '../../modules/prescriptions/useCases/FindPrescriptionsUseCase';
 
 interface Props {
-  medications: UIMedication[];
-  setMedications: (_: UIMedication[]) => void;
+  prescriptions: Prescription[];
+  setPrescriptions: (_: Prescription[]) => void;
   patientName: string;
   setPatientName: (_: string) => void;
 }
@@ -11,13 +13,25 @@ interface Props {
 const MedicationContext = createContext({} as Props);
 
 const MedicationProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
-  const [medications, setMedications] = useState<UIMedication[]>([]);
+  const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
   const [patientName, setPatientName] = useState('');
+
+  useEffect(() => {
+    (async () => {
+      setPrescriptions(await findPrescriptionsUseCase.execute({
+        page: 0,
+        size: 20,
+        templatesOnly: true
+      }));
+    })()
+  }, []);
+
+  useEffect(() => console.log('🙈',prescriptions), [prescriptions])
 
   return (
     <MedicationContext.Provider value={{
-      medications,
-      setMedications,
+      prescriptions,
+      setPrescriptions,
       patientName,
       setPatientName
     }}>

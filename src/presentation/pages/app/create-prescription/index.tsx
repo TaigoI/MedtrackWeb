@@ -6,25 +6,22 @@ import { Box, ListItem, ListSubheader, Paper, Switch, Table, TableBody, TableCel
 import { Delete, Print } from '@mui/icons-material';
 import { AddMedicationButton, ContentContainer, HorizontalRule, ImportMedicationButton, ListItemText, MainContainer, MedicationButtonsContainer, MedicationList, PrintFloatingButton, SaveAsTemplateContainer, SectionContainer, Title } from './styles';
 import { ImportMedicationModal } from '../../../components/import-medication-modal';
-import { Medication } from '../../../../modules/medications/entities/Medication';
 import { isMedicationKeyHidden, medicationKeyTranslator } from './data';
 import { toast } from 'react-toastify';
 import { AddMedicationModal } from '../../../components/add-medication-modal';
-import { ValidMedicationsMock } from '../../../../modules/medications/mocks/valid-medications';
-import ReactPDF from '@react-pdf/renderer';
-import { PrescriptionTemplate } from '../../../templates/prescription';
 import { useNavigate } from 'react-router-dom';
 import { useMedication } from '../../../context/MedicationContext';
-import { UIMedication } from '../../../../modules/medications/entities/UIMedication';
+import { Prescription } from '../../../../modules/prescriptions/entities/Prescription';
+import { PrescriptionItem } from '../../../../modules/prescriptions/entities/PrescriptionItem';
 
 export const CreatePrescriptionScreen: React.FC = () => {
   const [saveAsTemplate, setSaveAsTemplate] = useState<boolean>();
   const [isImportationOpen, setImportationOpen] = React.useState(false);
   const [isAdditionOpen, setAdditionOpen] = React.useState(false);
   const {
-    medications,
+    prescriptions,
     patientName,
-    setMedications,
+    setPrescriptions,
     setPatientName
   } = useMedication();
 
@@ -47,7 +44,7 @@ export const CreatePrescriptionScreen: React.FC = () => {
     toast.success(`Receita criada com sucesso!`, {
       theme: 'colored'
     });
-    navigate('/app/receita/pdf', {patientName, medications} as unknown as never);
+    navigate('/app/receita/pdf', {patientName, prescriptions} as unknown as never);
   }
 
   function handlePrint() {
@@ -56,26 +53,26 @@ export const CreatePrescriptionScreen: React.FC = () => {
       return;
     } 
     setPatientNameError(undefined);
-    if (medications.length === 0) {
+    if (prescriptions.length === 0) {
       handleError('Adicione algum medicamento!');
       return;
     }
     handleSuccess();
   }
 
-  const handleImport = (_medications: Medication[]) => {
-    setMedications([
-      ...medications,
-      ...(_medications.map(medication => new UIMedication(medication.id, medication.name, medication.doseUnit, medication.doseAmount, medication.frequencyInMinutes, medication.usageDurationInDays)))
-    ]);
+  const handleImport = (_prescriptions: Prescription[]) => {
+    // setMedications([
+    //   ...prescriptions,
+    //   ...(_Prescriptions.map(medication => new UIMedication(medication.id, medication.name, medication.doseUnit, medication.doseAmount, medication.frequencyInMinutes, medication.usageDurationInDays)))
+    // ]);
   }
 
-  const handleAddMedication = (medication: Medication) => {
-    ValidMedicationsMock.push(medication)
-    setMedications([
-      ...medications,
-      new UIMedication(medication.id, medication.name, medication.doseUnit, medication.doseAmount, medication.frequencyInMinutes, medication.usageDurationInDays)
-    ]);
+  const handleAddMedication = (medication: PrescriptionItem) => {
+    // ValidMedicationsMock.push(medication)
+    // setMedications([
+    //   ...prescriptions,
+    //   new UIMedication(medication.id, medication.name, medication.doseUnit, medication.doseAmount, medication.frequencyInMinutes, medication.usageDurationInDays)
+    // ]);
   }
 
   return (
@@ -112,9 +109,9 @@ export const CreatePrescriptionScreen: React.FC = () => {
             <Title>Medicamentos</Title>
             <HorizontalRule/>
             <MedicationList>
-              {medications.length > 0 ? medications.map((medication, index) => (
+              {prescriptions.length > 0 ? prescriptions.map((medication, index) => (
                 <li key={`section-${medication.id}`}>
-                  <ul>
+                  {/* <ul>
                     <Box sx={{
                       display: 'flex',
                       alignItems: 'center'
@@ -124,7 +121,7 @@ export const CreatePrescriptionScreen: React.FC = () => {
                       </ListSubheader>
                       <Delete 
                         onClick={() => {
-                          setMedications(medications.filter(item => item.id !== medication.id))
+                          setPrescriptions(prescriptions.filter(item => item.id !== medication.id))
                         }} 
                         sx={{
                           cursor: 'pointer'
@@ -135,12 +132,12 @@ export const CreatePrescriptionScreen: React.FC = () => {
                       if (isMedicationKeyHidden(key)) return <></>;
                       return <ListItem key={`item-${medication}-${key}`}>
                         <ListItemText>
-                          <b>{medicationKeyTranslator(key)}</b>: {medication[key as keyof Medication]}
+                          <b>{medicationKeyTranslator(key)}</b>: {medication[key as keyof Prescription]}
                         </ListItemText>
                       </ListItem>
                     })}
                     
-                  </ul>
+                  </ul> */}
                 </li>
               )) :  <p>Importe ou adicione medicamentos</p>}
             </MedicationList>
