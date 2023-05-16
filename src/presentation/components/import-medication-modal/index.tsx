@@ -26,6 +26,7 @@ export const ImportMedicationModal: React.FC<IImportMedicationModalComponentProp
       setSelectedPrescriptions(prescriptions.map(item => ({
         ...item,
         checked: false,
+
       })))
     }
   }, [prescriptions])
@@ -43,7 +44,7 @@ export const ImportMedicationModal: React.FC<IImportMedicationModalComponentProp
   };
 
   const handleInternalImport = () => {
-    handleImport(prescriptions.filter(_prescription => _prescription.checked));
+    handleImport(selectedPrescriptions.filter(_prescription => _prescription.checked));
     setSelectedPrescriptions(prescriptions.map(_prescription => {
       return {
         ..._prescription,
@@ -65,7 +66,7 @@ export const ImportMedicationModal: React.FC<IImportMedicationModalComponentProp
           Importar medicamentos
         </Typography>
         <MedicationList>
-          {selectedPrescriptions.map((prescription: Prescription) => {
+          {selectedPrescriptions.length > 0 ? selectedPrescriptions.map((prescription: Prescription) => {
             const labelId = `checkbox-list-label-${prescription.id}`;
             return (
               <ListItem
@@ -89,7 +90,7 @@ export const ImportMedicationModal: React.FC<IImportMedicationModalComponentProp
                 </ListItemButton>
               </ListItem>
             );
-          })}
+          }) : <p>Não há receitas cadastradas como modelo no momento</p>}
         </MedicationList>
         <ImportMedicationButton onClick={handleInternalImport}>Importar</ImportMedicationButton>
       </ContentContainer>

@@ -8,7 +8,7 @@ export class Prescription {
     readonly description: string,
     readonly user: User['id'],
     readonly createdAt: Date,
-    readonly itemList: PrescriptionItem[],
+    readonly items: PrescriptionItem[],
     readonly template: boolean,
     readonly templateTitle: string,
     readonly templateDescription: string,

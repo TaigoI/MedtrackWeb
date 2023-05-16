@@ -1,8 +1,7 @@
 const medicationKeysToShow = [
   'doseAmount',
   'doseUnit',
-  'frequencyInHours',
-  'usageDurationInDaysToShow'
+  'interval',
 ];
 
 export const isMedicationKeyHidden = (key: string) => !medicationKeysToShow.includes(key);
@@ -11,8 +10,14 @@ export const medicationKeyTranslator = (key: string): string => {
   const keys: {[key: string]: string}= {
     doseAmount: 'Dose',
     doseUnit: 'Dosagem',
-    frequencyInHours: 'A cada',
-    usageDurationInDaysToShow: 'Por'
+    interval: 'A cada',
   };
   return keys[key];
 };
+
+export const intervalMapper: {[key: string]: string}= {
+  minute: 'min',
+  minutes: 'min',
+  hour: 'h',
+  hours: 'h'
+}

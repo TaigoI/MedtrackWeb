@@ -6,18 +6,20 @@ import { Box, ListItem, ListSubheader, Paper, Switch, Table, TableBody, TableCel
 import { Delete, Print } from '@mui/icons-material';
 import { AddMedicationButton, ContentContainer, HorizontalRule, ImportMedicationButton, ListItemText, MainContainer, MedicationButtonsContainer, MedicationList, PrintFloatingButton, SaveAsTemplateContainer, SectionContainer, Title } from './styles';
 import { ImportMedicationModal } from '../../../components/import-medication-modal';
-import { isMedicationKeyHidden, medicationKeyTranslator } from './data';
+import { intervalMapper, isMedicationKeyHidden, medicationKeyTranslator } from './data';
 import { toast } from 'react-toastify';
 import { AddMedicationModal } from '../../../components/add-medication-modal';
 import { useNavigate } from 'react-router-dom';
 import { useMedication } from '../../../context/MedicationContext';
 import { Prescription } from '../../../../modules/prescriptions/entities/Prescription';
 import { PrescriptionItem } from '../../../../modules/prescriptions/entities/PrescriptionItem';
+import { v4 } from 'uuid';
 
 export const CreatePrescriptionScreen: React.FC = () => {
   const [saveAsTemplate, setSaveAsTemplate] = useState<boolean>();
   const [isImportationOpen, setImportationOpen] = React.useState(false);
   const [isAdditionOpen, setAdditionOpen] = React.useState(false);
+  const [prescriptionItems, setPrescriptionItems] = React.useState<PrescriptionItem[]>([]);
   const {
     prescriptions,
     patientName,
@@ -61,10 +63,10 @@ export const CreatePrescriptionScreen: React.FC = () => {
   }
 
   const handleImport = (_prescriptions: Prescription[]) => {
-    // setMedications([
-    //   ...prescriptions,
-    //   ...(_Prescriptions.map(medication => new UIMedication(medication.id, medication.name, medication.doseUnit, medication.doseAmount, medication.frequencyInMinutes, medication.usageDurationInDays)))
-    // ]);
+    console.log('✈ ',_prescriptions)
+    const allItems = _prescriptions.reduce((previous: PrescriptionItem[], prescription) => [...previous, ...prescription.items], []);
+    console.log('🧑 ', allItems)
+    setPrescriptionItems(allItems);
   }
 
   const handleAddMedication = (medication: PrescriptionItem) => {
@@ -109,35 +111,46 @@ export const CreatePrescriptionScreen: React.FC = () => {
             <Title>Medicamentos</Title>
             <HorizontalRule/>
             <MedicationList>
-              {prescriptions.length > 0 ? prescriptions.map((medication, index) => (
-                <li key={`section-${medication.id}`}>
-                  {/* <ul>
+              {prescriptionItems.length > 0 ? prescriptionItems.map((prescriptionItem, index) => (
+                <li key={`section-${prescriptionItem.id}`}>
+                  <ul>
                     <Box sx={{
                       display: 'flex',
                       alignItems: 'center'
                     }}>
                       <ListSubheader>
-                        {`${index + 1}. ${medication.name}`}
+                        {`${index + 1}. ${prescriptionItem.medicationPresentation.medication.name}`}
                       </ListSubheader>
                       <Delete 
                         onClick={() => {
-                          setPrescriptions(prescriptions.filter(item => item.id !== medication.id))
+                          setPrescriptionItems(previous => previous.filter((item, pIndex)=> index !== pIndex))
                         }} 
                         sx={{
                           cursor: 'pointer'
                         }}
                       />
                     </Box>
-                    {Object.keys(medication).map((key) => {
-                      if (isMedicationKeyHidden(key)) return <></>;
-                      return <ListItem key={`item-${medication}-${key}`}>
-                        <ListItemText>
-                          <b>{medicationKeyTranslator(key)}</b>: {medication[key as keyof Prescription]}
-                        </ListItemText>
-                      </ListItem>
-                    })}
-                    
-                  </ul> */}
+                    <ListItem>
+                      <ListItemText>
+                        <b>Dosagem</b>: {prescriptionItem.medicationPresentation.dosage.amount}{prescriptionItem.medicationPresentation.dosage.unit}
+                      </ListItemText>
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText>
+                        <b>Tipo</b>: {prescriptionItem.medicationPresentation.presentation.name}
+                      </ListItemText>
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText>
+                        <b>Dose</b>: {prescriptionItem.doseAmount}
+                      </ListItemText>
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText>
+                        <b>A cada</b>: {prescriptionItem.interval}{intervalMapper[prescriptionItem.intervalUnit]}
+                      </ListItemText>
+                    </ListItem>
+                  </ul>
                 </li>
               )) :  <p>Importe ou adicione medicamentos</p>}
             </MedicationList>
