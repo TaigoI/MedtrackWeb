@@ -71,7 +71,8 @@ export const CreatePrescriptionScreen: React.FC = () => {
     setPrescriptionItems(allItems);
   }
 
-  const handleAddMedication = (medication: PrescriptionItem) => {
+  const handleAddMedication = (prescriptionItem: PrescriptionItem) => {
+    setPrescriptionItems(previous => [...previous, prescriptionItem]);
     // ValidMedicationsMock.push(medication)
     // setMedications([
     //   ...prescriptions,
