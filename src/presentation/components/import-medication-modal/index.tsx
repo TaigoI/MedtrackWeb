@@ -1,15 +1,16 @@
 import { Modal, Typography, Checkbox, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ContentContainer, ImportMedicationButton, MedicationList } from './styles';
 import { Medication } from '../../../modules/medications/entities/Medication';
-import { UIMedication } from '../../../modules/medications/entities/UIMedication';
-import { ValidUIMedicationsMock } from '../../../modules/medications/mocks/valid-ui-medications';
+// import { ValidUIMedicationsMock } from '../../../modules/medications/mocks/valid-ui-medications';
 import { v4 } from 'uuid';
+import { Prescription } from '../../../modules/prescriptions/entities/Prescription';
+import { useMedication } from '../../context/MedicationContext';
 
 export interface IImportMedicationModalComponentProps {
   isOpen: boolean;
   handleClose: () => void;
-  handleImport: (medications: Medication[]) => void;
+  handleImport: (medications: Prescription[]) => void;
 }
 
 export const ImportMedicationModal: React.FC<IImportMedicationModalComponentProps> = ({
@@ -17,27 +18,36 @@ export const ImportMedicationModal: React.FC<IImportMedicationModalComponentProp
   handleClose,
   isOpen 
 }) => {
-  const [medications, setMedications] = useState<UIMedication[]>(ValidUIMedicationsMock);
+  const {prescriptions} = useMedication();
+  const [selectedPrescriptions, setSelectedPrescriptions] = useState<Prescription[]>([]);
 
-  const handleToggle = (medication: UIMedication) => () => {
-    setMedications(medications.map(_medication => {
-      if (_medication.id === medication.id) {
+  useEffect(() => {
+    if (prescriptions) {
+      setSelectedPrescriptions(prescriptions.filter(item => item.template).map(item => ({
+        ...item,
+        checked: false,
+      })))
+    }
+  }, [prescriptions])
+
+  const handleToggle = (prescription: Prescription) => () => {
+    setSelectedPrescriptions(selectedPrescriptions.map(_prescription => {
+      if (_prescription.id === prescription.id){ 
         return {
-          ..._medication,
-          checked: !_medication.checked
+          ..._prescription,
+          checked: !_prescription.checked,
         }
       }
-      return _medication;
+      return _prescription
     }))
   };
 
   const handleInternalImport = () => {
-    handleImport(medications.filter(_medication => _medication.checked));
-    setMedications(medications.map(_medication => {
+    handleImport(selectedPrescriptions.filter(_prescription => _prescription.checked));
+    setSelectedPrescriptions(prescriptions.filter(item => item.template).map(_prescription => {
       return {
-        ..._medication,
+        ..._prescription,
         checked: false,
-        id: v4()
       }
     }))
     handleClose();
@@ -55,31 +65,31 @@ export const ImportMedicationModal: React.FC<IImportMedicationModalComponentProp
           Importar medicamentos
         </Typography>
         <MedicationList>
-          {medications.map((medication) => {
-            const labelId = `checkbox-list-label-${medication.id}`;
+          {selectedPrescriptions.length > 0 ? selectedPrescriptions.map((prescription: Prescription) => {
+            const labelId = `checkbox-list-label-${prescription.id}`;
             return (
               <ListItem
-                key={medication.id}
+                key={prescription.id}
                 disablePadding
               >
-                <ListItemButton role={undefined} onClick={handleToggle(medication)} dense>
+                <ListItemButton role={undefined} onClick={handleToggle(prescription)} dense>
                   <ListItemIcon>
                     <Checkbox
                       edge="start"
-                      checked={medication.checked}
+                      checked={prescription.checked}
                       onChange={() => {
-                        handleToggle(medication)
+                        handleToggle(prescription)
                       }}
                       tabIndex={-1}
                       disableRipple
                       inputProps={{ 'aria-labelledby': labelId }}
                     />
                   </ListItemIcon>
-                  <ListItemText id={labelId} primary={`${medication.name}  ${medication.doseUnit} | ${medication.doseAmount} a cada ${medication.frequencyInMinutes / 60} horas | ${medication.usageDurationInDays} dia${medication.usageDurationInDays > 1 ? 's' : ''}`} />
+                  <ListItemText id={labelId} primary={prescription.templateTitle} />
                 </ListItemButton>
               </ListItem>
             );
-          })}
+          }) : <p>Não há receitas cadastradas como modelo no momento</p>}
         </MedicationList>
         <ImportMedicationButton onClick={handleInternalImport}>Importar</ImportMedicationButton>
       </ContentContainer>

@@ -10,13 +10,16 @@ import {
 } from "react-router-dom";
 import { MainRouter } from './presentation/routes';
 import { MedicationProvider } from './presentation/context/MedicationContext';
+import { AuthenticationProvider } from './presentation/context/AuthenticationContext';
 
 function App() {
   return (
-    <MedicationProvider>
-      <ToastContainer />
-      <RouterProvider router={MainRouter} />
-    </MedicationProvider>
+    <AuthenticationProvider>
+      <MedicationProvider>
+        <ToastContainer />
+        <RouterProvider router={MainRouter} />
+      </MedicationProvider>
+    </AuthenticationProvider>
   );
 }
 
