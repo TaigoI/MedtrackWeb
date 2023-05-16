@@ -22,8 +22,9 @@ axiosInstance.interceptors.request.use((config)=> {
 axiosInstance.interceptors.response.use(response => {
   if (!response.data) return response;
   if (!('token' in response.data)) return response;
-  Cookies.set('accessToken', response.data.token);
-  return response;
+  const {token, ...dataRest} = response.data;
+  Cookies.set('accessToken', token);
+  return {...response, data: dataRest};
 });
 
 export const AxiosHttpClient = axiosInstance;

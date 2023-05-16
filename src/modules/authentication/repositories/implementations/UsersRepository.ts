@@ -5,6 +5,7 @@ import { IUsersRepository } from "../IUsersRepository";
 
 export class UsersRepository implements IUsersRepository {
   async authenticate(data: IAuthenticationDTO): Promise<User> {
-    return await AxiosHttpClient.post('/auth/login', data);
+    const response = await AxiosHttpClient.post('/auth/login', data);
+    return response.data;
   }
 }

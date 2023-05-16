@@ -1,7 +1,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { UsersRepository } from '../../modules/authentication/repositories/implementations/UsersRepository';
 import { User } from '../../modules/authentication/entities/User';
+import { authenticateUserUseCase } from '../../modules/authentication/useCases/AuthenticateUserUseCase';
 
 interface Props {
   user: User | undefined;
@@ -14,24 +14,22 @@ const AuthenticationProvider: React.FC<{children: React.ReactNode}> = ({ childre
   const [user, setUser] = useState<User>();
 
   useEffect(() => {
-    const repo = new UsersRepository();
     (async () => {
       try {
-        console.log('auth')
-        await repo.authenticate({
+        setUser(await authenticateUserUseCase.execute({
           password: 'rui123',
           username: '56171542148'
-        })
+        }))
       } catch (err) {
         console.error(err)
       }
-
     })()
   }, [])
 
   return (
     <AuthenticationContext.Provider value={{
-      user,setUser
+      user,
+      setUser,
     }}>
       {children}
     </AuthenticationContext.Provider>
