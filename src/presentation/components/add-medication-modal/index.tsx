@@ -1,5 +1,5 @@
-import { InputAdornment, Modal, TextField, Typography } from '@mui/material';
-import React, { useEffect } from 'react';
+import { Autocomplete, InputAdornment, Modal, TextField, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
 import { ContentContainer, AddMedicationButton, MedicationList, MedicationField } from './styles';
 import { yupResolver } from '@hookform/resolvers/yup'
 
@@ -10,6 +10,8 @@ import { Controller, useForm } from 'react-hook-form';
 import { yupSchema } from './data';
 import { IFormValues } from './props';
 import { PrescriptionItem } from '../../../modules/prescriptions/entities/PrescriptionItem';
+import { AxiosHttpClient } from '../../../infra/http/AxiosHttpClient';
+import { Dosage } from '../../../modules/medications/entities/Dosage';
 
 export interface IAddMedicationModalComponentProps {
   isOpen: boolean;
@@ -22,7 +24,7 @@ export const AddMedicationModal: React.FC<IAddMedicationModalComponentProps> = (
   handleClose,
   isOpen 
 }) => {
-  const { handleSubmit, control, reset, formState: {errors} } = useForm<IFormValues>({
+  const { handleSubmit, control, setValue, reset, formState: {errors} } = useForm<IFormValues>({
     resolver: yupResolver(yupSchema),
     defaultValues: {
       doseAmount: 0,
@@ -32,6 +34,8 @@ export const AddMedicationModal: React.FC<IAddMedicationModalComponentProps> = (
       usageDurationInDays: 0
     }
   });
+  const [medicationOptions, setMedicationOptions] = useState<{id: string; label: string}[]>([]);
+  const [dosageOptions, setDosageOptions] = useState<{id: string; label: string}[]>([]);
   
   useEffect(() => console.log(errors), [errors])
 
@@ -39,11 +43,24 @@ export const AddMedicationModal: React.FC<IAddMedicationModalComponentProps> = (
     console.log(data)
     // handleAdd({
     //   ...data,
-    //   id: v4()
+    //   comments: '',
+    //   interval: data.frequencyInMinutes,
+    //   intervalUnit: 'minute',
+    //   medicationPresentation: 
+    //   id: Math.random() * 1000
     // })
     handleClose();
     reset();
   };
+
+  async function handleSearchMedication(medication: string) {
+    const response = await AxiosHttpClient.get(`/medication?medication=${medication}`);
+    setMedicationOptions(response.data.content.map((item: Medication)=> ({id: item.id, label: item.name})));
+  }
+  async function handleSearchDosage(medication: string) {
+    const response = await AxiosHttpClient.get(`/dosage?medication=${medication}`);
+    setDosageOptions(response.data.content.map((item: Dosage)=> ({id: item.id, label: `${item.amount} ${item.unit}`})));
+  }
 
   return (
     <Modal
@@ -60,21 +77,27 @@ export const AddMedicationModal: React.FC<IAddMedicationModalComponentProps> = (
           control={control}
           name="name"
           render={({ field: { onChange, onBlur, value, ref } }) => (
-            <MedicationField 
+            <Autocomplete 
+            options={medicationOptions}
+            disablePortal
+            onChange={(event, value)=> {
+              if (value)
+                handleSearchDosage(value.label)
+            }}
+            renderInput={(params) => <MedicationField
               name='name'
-              onChange={onChange}
+              {...params}
+              onChange={async data => {
+                handleSearchMedication(data.target.value)
+                onChange(data);
+              }}
               value={value} 
               error={!!errors.name?.message}
               helperText={errors.name?.message}
               label={'Nome'}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Title />
-                  </InputAdornment>
-                ),
-              }}
+            />}
             />
+            
           )}
         />
         
@@ -83,20 +106,22 @@ export const AddMedicationModal: React.FC<IAddMedicationModalComponentProps> = (
           control={control}
           name="doseUnit"
           render={({ field: { onChange, onBlur, value, ref } }) => (
-        <MedicationField 
-          onChange={onChange}
-          value={value}
-          error={!!errors.doseUnit?.message}
-          helperText={errors.doseUnit?.message}
-          label={'Dosagem'}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <MedicalInformation />
-              </InputAdornment>
-            ),
-          }}
-        />)} />
+            <Autocomplete 
+            options={dosageOptions}
+            disablePortal
+            onChange={(_, value) => value?.id && setValue('doseUnit', value.id)}
+            renderInput={params => (
+              <MedicationField 
+                {...params}
+                name='doseUnit'
+                onChange={onChange}
+                value={value}
+                error={!!errors.doseUnit?.message}
+                helperText={errors.doseUnit?.message}
+                label={'Dosagem'}
+              />
+            )} />
+        )} />
 
         <Controller
           control={control}
@@ -144,7 +169,7 @@ export const AddMedicationModal: React.FC<IAddMedicationModalComponentProps> = (
           onChange={onChange}
           value={value} 
           error={!!errors.usageDurationInDays?.message}
-          helperText={errors.usageDurationInDays?.message}
+          helperText={errors.usageDurationInDays?.message || 'Valor em dias'}
           label={'Por'}
           InputProps={{
             startAdornment: (
