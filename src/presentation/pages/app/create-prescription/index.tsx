@@ -19,10 +19,12 @@ export const CreatePrescriptionScreen: React.FC = () => {
   const [saveAsTemplate, setSaveAsTemplate] = useState<boolean>();
   const [isImportationOpen, setImportationOpen] = React.useState(false);
   const [isAdditionOpen, setAdditionOpen] = React.useState(false);
-  const [prescriptionItems, setPrescriptionItems] = React.useState<PrescriptionItem[]>([]);
+
   const {
     prescriptions,
     patientName,
+    prescriptionItems,
+    setPrescriptionItems,
     setPrescriptions,
     setPatientName
   } = useMedication();
@@ -112,7 +114,7 @@ export const CreatePrescriptionScreen: React.FC = () => {
             <HorizontalRule/>
             <MedicationList>
               {prescriptionItems.length > 0 ? prescriptionItems.map((prescriptionItem, index) => (
-                <li key={`section-${prescriptionItem.id}`}>
+                <li key={`section-${index}`}>
                   <ul>
                     <Box sx={{
                       display: 'flex',
