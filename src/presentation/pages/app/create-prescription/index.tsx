@@ -14,6 +14,7 @@ import { useMedication } from '../../../context/MedicationContext';
 import { Prescription } from '../../../../modules/prescriptions/entities/Prescription';
 import { PrescriptionItem } from '../../../../modules/prescriptions/entities/PrescriptionItem';
 import { v4 } from 'uuid';
+import { useAuthentication } from '../../../context/AuthenticationContext';
 
 export const CreatePrescriptionScreen: React.FC = () => {
   const [saveAsTemplate, setSaveAsTemplate] = useState<boolean>();
@@ -30,11 +31,14 @@ export const CreatePrescriptionScreen: React.FC = () => {
   } = useMedication();
 
   const [patientNameError, setPatientNameError] = useState<string>();
+  const [templateDescription, setTemplateDescription] = useState<string>('');
 
   const handleOpenImportation = () => setImportationOpen(true);
   const handleCloseImportation = () => setImportationOpen(false);
   const handleOpenAddition = () => setAdditionOpen(true);
   const handleCloseAddition = () => setAdditionOpen(false);
+
+  const {user} = useAuthentication();
 
   const navigate = useNavigate();
 
@@ -61,6 +65,28 @@ export const CreatePrescriptionScreen: React.FC = () => {
       handleError('Adicione algum medicamento!');
       return;
     }
+    console.log(saveAsTemplate, templateDescription, user)
+    if (saveAsTemplate && templateDescription && user) {
+      const prescriptionLocal: Prescription = {
+        id: Math.random(),
+        createdAt: new Date(),
+        description: 'Receita de ' + patientName,
+        templateDescription,
+        templateTitle: templateDescription,
+        items: prescriptionItems,
+        template: true,
+        title: 'Receita de ' + patientName,
+        user: user.id,
+      }
+      const savedPrescriptions = localStorage.getItem("prescriptions");
+      console.log('saved', savedPrescriptions, prescriptionLocal)
+      if (!savedPrescriptions) {
+        localStorage.setItem("prescriptions",JSON.stringify([prescriptionLocal]));
+      } else {
+        localStorage.setItem("prescriptions",JSON.stringify([...JSON.parse(savedPrescriptions), prescriptionLocal]));
+      }
+
+    }
     handleSuccess();
   }
 
@@ -73,12 +99,9 @@ export const CreatePrescriptionScreen: React.FC = () => {
 
   const handleAddMedication = (prescriptionItem: PrescriptionItem) => {
     setPrescriptionItems(previous => [...previous, prescriptionItem]);
-    // ValidMedicationsMock.push(medication)
-    // setMedications([
-    //   ...prescriptions,
-    //   new UIMedication(medication.id, medication.name, medication.doseUnit, medication.doseAmount, medication.frequencyInMinutes, medication.usageDurationInDays)
-    // ]);
   }
+
+
 
   return (
     <DashboardContainerComponent appBar={{
@@ -169,7 +192,7 @@ export const CreatePrescriptionScreen: React.FC = () => {
               <p>Salvar como Modelo</p>
               <Switch defaultChecked={false} value={saveAsTemplate} onChange={e => setSaveAsTemplate(e.target.checked)} />
             </SaveAsTemplateContainer>
-            <TextField label='Descrição do modelo' disabled={!saveAsTemplate} />
+            <TextField label='Descrição do modelo' disabled={!saveAsTemplate} value={templateDescription} onChange={e=> setTemplateDescription(e.target.value)}/>
           </SectionContainer>
         </ContentContainer>
       </MainContainer> 

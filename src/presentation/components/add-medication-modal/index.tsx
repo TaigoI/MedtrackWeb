@@ -75,6 +75,7 @@ export const AddMedicationModal: React.FC<IAddMedicationModalComponentProps> = (
       },
       occurrences: data.frequencyInHours * data.doseAmount,
       doseAmount: data.doseAmount,
+      id: Math.random(),
     })
     handleClose();
     reset();

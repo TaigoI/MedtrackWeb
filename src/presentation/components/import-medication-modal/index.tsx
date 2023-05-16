@@ -23,10 +23,9 @@ export const ImportMedicationModal: React.FC<IImportMedicationModalComponentProp
 
   useEffect(() => {
     if (prescriptions) {
-      setSelectedPrescriptions(prescriptions.map(item => ({
+      setSelectedPrescriptions(prescriptions.filter(item => item.template).map(item => ({
         ...item,
         checked: false,
-
       })))
     }
   }, [prescriptions])
@@ -45,7 +44,7 @@ export const ImportMedicationModal: React.FC<IImportMedicationModalComponentProp
 
   const handleInternalImport = () => {
     handleImport(selectedPrescriptions.filter(_prescription => _prescription.checked));
-    setSelectedPrescriptions(prescriptions.map(_prescription => {
+    setSelectedPrescriptions(prescriptions.filter(item => item.template).map(_prescription => {
       return {
         ..._prescription,
         checked: false,
