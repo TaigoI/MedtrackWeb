@@ -1,9 +1,8 @@
-import { UIMedication } from "../entities/UIMedication";
 import { ValidMedicationsMock } from "./valid-medications";
 
-export const ValidUIMedicationsMock: UIMedication[] = ValidMedicationsMock.map(item => ({
+export const ValidUIMedicationsMock: any[] = ValidMedicationsMock.map(item => ({
   ...item,
   checked: false,
-  usageDurationInDaysToShow: `${item.usageDurationInDays} dias`,
+  usageDurationInDaysToShow: `2 dias`,
   frequencyInHours: ''
 }));
