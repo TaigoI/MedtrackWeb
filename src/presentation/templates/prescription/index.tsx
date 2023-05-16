@@ -2,8 +2,8 @@ import AppLogo from '../../../assets/images/logo-transparent.png';
 import { Document, StyleSheet, Image, Page, Text, View } from '@react-pdf/renderer';
 import React, { useEffect, useState } from 'react';
 import QRCode from 'qrcode';
-import { Medication } from '../../../modules/medications/entities/Medication';
-import { isMedicationKeyHidden, medicationKeyTranslator } from '../../pages/app/create-prescription/data';
+import { intervalMapper } from '../../pages/app/create-prescription/data';
+import { PrescriptionItem } from '../../../modules/prescriptions/entities/PrescriptionItem';
 
 const styles = StyleSheet.create({
   qrCode: {
@@ -18,11 +18,11 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  medications: Medication[];
+  prescriptionItems: PrescriptionItem[];
   patientName: string;
 }
 
-export const PrescriptionTemplate: React.FC<Props> = ({medications, patientName}) => {
+export const PrescriptionTemplate: React.FC<Props> = ({prescriptionItems, patientName}) => {
   const [qrCodeUrl, setQRCodeUrl] = useState('');
 
   useEffect(() => {
@@ -65,19 +65,30 @@ export const PrescriptionTemplate: React.FC<Props> = ({medications, patientName}
           Medicamentos
         </Text>
         <View style={styles.horizontalRule} />
-        {medications.map((medication, index) => (
-            <View key={`section-${medication.id}`}>
-              <Text style={styles.subtitle}>{`${index + 1}. ${medication.name}`}</Text>
+        {prescriptionItems.map((prescriptionItem, index) => (
+            <View key={`section-${prescriptionItem.id}`}>
+              <Text style={styles.subtitle}>{`${index + 1}. ${prescriptionItem.medicationPresentation.medication.name}`}</Text>
               <View>
-  
-                {Object.keys(medication).map((key) => {
-                  if (isMedicationKeyHidden(key)) return <></>;
-                  return <View key={`item-${medication}-${key}`}>
-                    <Text style={styles.dataText}>
-                      <Text style={styles.dataText}>{medicationKeyTranslator(key)}</Text>: {medication[key as keyof Medication]}
-                    </Text>
-                  </View>
-                })}
+                <View>
+                  <Text style={styles.dataText}>
+                    <Text>Dosagem</Text>: {prescriptionItem.medicationPresentation.dosage.amount}{prescriptionItem.medicationPresentation.dosage.unit}
+                  </Text>
+                </View>
+                <View>
+                  <Text style={styles.dataText}>
+                    <Text>Tipo</Text>: {prescriptionItem.medicationPresentation.presentation.name}
+                  </Text>
+                </View>
+                <View>
+                  <Text style={styles.dataText}>
+                    <Text>Dose</Text>: {prescriptionItem.doseAmount}
+                  </Text>
+                </View>
+                <View>
+                  <Text style={styles.dataText}>
+                    <Text>A cada</Text>: {prescriptionItem.interval}{intervalMapper[prescriptionItem.intervalUnit]}
+                  </Text>
+                </View>
                 
               </View>
             </View>
