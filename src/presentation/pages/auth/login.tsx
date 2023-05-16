@@ -14,7 +14,7 @@ import {
   import { Link } from 'react-router-dom';
   import { literal, object, string, TypeOf } from 'zod';
   import { zodResolver } from '@hookform/resolvers/zod';
-  import { FormInput } from '../../components/auth/FormInput'
+  import { FormInput } from '../../components/auth/form-input';
   import styled from '@emotion/styled';
   
   export const LinkItem = styled(Link)`
@@ -30,12 +30,12 @@ import {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #f5f6f7;
+    background-color: #3683dc;
     border-radius: 1;
     padding: 0.6rem 0;
     column-gap: 1rem;
     text-decoration: none;
-    color: #393e45;
+    color: #3683dc;
     font-weight: 500;
     cursor: pointer;
   
@@ -74,7 +74,7 @@ import {
     return (
       <Container
         maxWidth={false}
-        sx={{ height: '100vh', backgroundColor: { xs: '#fff', md: '#f4f4f4' } }}
+        sx={{ height: '100vh', backgroundColor: { xs: '#fff', md: '#3683dc' } }}
       >
         <Grid
           container
@@ -125,7 +125,7 @@ import {
                         component='h1'
                         sx={{ textAlign: 'center', mb: '1.5rem' }}
                       >
-                        Entre em sua conta
+                        Acesse sua conta
                       </Typography>
   
                       <FormInput
@@ -161,7 +161,7 @@ import {
                               color: '#5e5b5d',
                             }}
                           >
-                            Mantenha-me conectado
+                            Mantenha-me conectado.
                           </Typography>
                         }
                       />
@@ -187,6 +187,7 @@ import {
                     <Typography sx={{ fontSize: '0.9rem', mb: '1rem' }}>
                       Não possui conta?{' '}
                       <LinkItem to='/signup'>Cadastre-se</LinkItem>
+                      .
                     </Typography>
                     <Typography sx={{ fontSize: '0.9rem' }}>
                       <LinkItem to='/forgotPassword'>Esqueceu sua senha?</LinkItem>

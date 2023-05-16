@@ -3,8 +3,8 @@ import { FC } from 'react';
 import { useForm, SubmitHandler, FormProvider } from 'react-hook-form';
 import { object, string, TypeOf } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FormInput } from '../../components/auth/FormInput';
-import { LinkItem, OauthMuiLink } from './styles';
+import { FormInput } from '../../components/auth/form-input';
+import { LinkItem, OauthMuiLink } from './login';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 const signupSchema = object({
@@ -44,18 +44,10 @@ export const SignupPage: FC = () => {
     console.log(JSON.stringify(values, null, 5));
   };
 
-  // 👇 Returned JSX
   return (
     <Container
-      maxWidth={false}
       sx={{ height: '100vh', backgroundColor: { xs: '#fff', md: '#f4f4f4' } }}
     >
-      <Grid
-        container
-        justifyContent='center'
-        alignItems='center'
-        sx={{ width: '100%', height: '100%' }}
-      >
         <Grid
           item
           sx={{ maxWidth: '70rem', width: '100%', backgroundColor: '#fff' }}
@@ -64,7 +56,7 @@ export const SignupPage: FC = () => {
             container
             sx={{
               boxShadow: { sm: '0 0 5px #ddd' },
-              py: '6rem',
+              py: '7rem',
               px: '1rem',
             }}
           >
@@ -73,7 +65,7 @@ export const SignupPage: FC = () => {
                 item
                 container
                 justifyContent='space-between'
-                rowSpacing={5}
+                rowSpacing={6}
                 sx={{
                   maxWidth: { sm: '45rem' },
                   marginInline: 'auto',
@@ -83,7 +75,7 @@ export const SignupPage: FC = () => {
                   item
                   xs={12}
                   sm={6}
-                  sx={{ borderRight: { sm: '1px solid #ddd' } }}
+                  sx={{ borderRight: { sm: '5px solid #ddd' } }}
                 >
                   <Box
                     display='flex'
@@ -91,7 +83,7 @@ export const SignupPage: FC = () => {
                     component='form'
                     noValidate
                     autoComplete='off'
-                    sx={{ paddingRight: { sm: '3rem' } }}
+                    sx={{ padding: { sm: '1rem' } }}
                     onSubmit={methods.handleSubmit(onSubmitHandler)}
                   >
                     <Typography
@@ -177,7 +169,6 @@ export const SignupPage: FC = () => {
             </FormProvider>
           </Grid>
         </Grid>
-      </Grid>
     </Container>
   );
 };
