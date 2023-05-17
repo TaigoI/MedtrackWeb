@@ -11,7 +11,7 @@ import {
 import LoadingButton from '@mui/lab/LoadingButton';
 import { FC } from 'react';
 import { useForm, SubmitHandler, FormProvider } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { literal, object, string, TypeOf } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormInput } from '../../components/auth/form-input';
@@ -49,8 +49,11 @@ export const LoginPage: FC = () => {
     defaultValues,
   });
 
+  const navigate = useNavigate();
+
   const onSubmitHandler: SubmitHandler<ILogin> = (values: ILogin) => {
     console.log(values);
+    navigate('/app');
   };
 
   return (
@@ -152,6 +155,7 @@ export const LoginPage: FC = () => {
                       loading={false}
                       type='submit'
                       variant='contained'
+                      onClick={() => navigate('/app')}
                       sx={{
                         py: '0.8rem',
                         mt: 2,

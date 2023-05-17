@@ -12,6 +12,7 @@ import { FormInput } from "../../components/auth/form-input";
 import { LinkItem } from "./login";
 import DoctorImage from '../../../assets/images/doctor.png'
 import LoadingButton from "@mui/lab/LoadingButton";
+import { useNavigate } from "react-router-dom";
 
 const signupSchema = object({
   name: string().min(1, "Digite o nome completo.").max(70),
@@ -113,8 +114,11 @@ export const SignupPage: FC = () => {
     defaultValues,
   });
 
+  const navigate = useNavigate()
+
   const onSubmitHandler: SubmitHandler<ISignUp> = (values: ISignUp) => {
     console.log(JSON.stringify(values, null, 5));
+    navigate('/app')
   };
 
   return (
