@@ -1,7 +1,7 @@
-import { FC } from 'react';
-import { useFormContext, Controller } from 'react-hook-form';
-import { TextField, TextFieldProps } from '@mui/material';
-import { CssTextField } from './styles';
+import { FC } from "react";
+import { useFormContext, Controller } from "react-hook-form";
+import { TextFieldProps } from "@mui/material";
+import { CssTextField } from "./styles";
 
 type FormInputProps = {
   name: string;
@@ -17,16 +17,16 @@ export const FormInput: FC<FormInputProps> = ({ name, ...otherProps }) => {
     <Controller
       control={control}
       name={name}
-      defaultValue=''
+      defaultValue=""
       render={({ field }) => (
         <CssTextField
           {...field}
           {...otherProps}
-          variant='outlined'
-          sx={{ mb: '1.5rem' }}
+          variant="outlined"
+          sx={{ mb: "1.5rem", ...(otherProps.sx || {}) }}
           error={!!errors[name]}
           helperText={
-            errors[name] ? (errors[name]?.message as unknown as string) : ''
+            errors[name] ? (errors[name]?.message as unknown as string) : ""
           }
         />
       )}

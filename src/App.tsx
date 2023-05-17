@@ -10,6 +10,15 @@ import {
 } from "react-router-dom";
 import { MainRouter } from './presentation/routes';
 import { MedicationProvider } from './presentation/context/MedicationContext';
+import { createGlobalStyle } from "styled-components";
+
+const GlobalStyle = createGlobalStyle`
+  body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+`;
 
 function App() {
   return (
