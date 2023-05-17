@@ -17,6 +17,7 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { styles, LogoImg } from './styles';
 import MedtrackLogo from '../../../../assets/images/logo.png';
+import { useNavigate } from 'react-router-dom';
 
 const ElevationScroll = (props:any) => {
   const { children, window } = props;
@@ -78,6 +79,7 @@ export const LandingPageHeader = (props: any) => {
 
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.down('sm'));
+  const navigate = useNavigate()
 
   return (
     <Box sx={{ marginBottom: '70px' }}>
@@ -116,7 +118,7 @@ export const LandingPageHeader = (props: any) => {
               }}
             >
               {links.map((link) => (
-                <Link href={link.url} target="_blank" underline="none" key={link.id}>
+                <Link onClick={() => navigate(link.url)} style={{cursor: 'pointer'}} underline="none" key={link.id}>
                   <Typography sx={styles.link}>{link.route}</Typography>
                 </Link>
               ))}
