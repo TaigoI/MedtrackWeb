@@ -11,6 +11,7 @@ import {
 import { MainRouter } from './presentation/routes';
 import { MedicationProvider } from './presentation/context/MedicationContext';
 import { createGlobalStyle } from "styled-components";
+import { AuthenticationProvider } from './presentation/context/AuthenticationContext';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -22,10 +23,12 @@ const GlobalStyle = createGlobalStyle`
 
 function App() {
   return (
-    <MedicationProvider>
-      <ToastContainer />
-      <RouterProvider router={MainRouter} />
-    </MedicationProvider>
+    <AuthenticationProvider>
+      <MedicationProvider>
+        <ToastContainer />
+        <RouterProvider router={MainRouter} />
+      </MedicationProvider>
+    </AuthenticationProvider>
   );
 }
 
