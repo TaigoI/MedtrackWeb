@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import Toolbar from '@mui/material/Toolbar';
 import { Box } from '@mui/material';
@@ -6,7 +6,6 @@ import { DashboardContainerComponent } from '../../../components/dashboard-conta
 import { generatedAvatarUrlFactory } from '../../../../shared/utils/generated-avatar-url-factory';
 import { BarChart } from '../../../components/bar-chart';
 import { useAuthentication } from '../../../context/AuthenticationContext';
-import { useNavigate } from 'react-router-dom';
 
 
 export const HomeScreen: React.FC = () => {

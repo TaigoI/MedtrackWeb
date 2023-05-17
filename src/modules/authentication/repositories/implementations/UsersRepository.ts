@@ -7,6 +7,8 @@ export class UsersRepository implements IUsersRepository {
   async authenticate(data: IAuthenticationDTO): Promise<User> {
     const response = await AxiosHttpClient.post('/auth/login', data);
     if (response.status !== 200) throw new Error(response.data)
-    return response.data;
+    const userResponse = await AxiosHttpClient.get('/user');
+    if (userResponse.status !== 200) throw new Error(userResponse.data)
+    return userResponse.data;
   }
 }

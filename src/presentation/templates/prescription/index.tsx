@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import QRCode from 'qrcode';
 import { intervalMapper } from '../../pages/app/create-prescription/data';
 import { PrescriptionItem } from '../../../modules/prescriptions/entities/PrescriptionItem';
+import { User } from '../../../modules/authentication/entities/User';
 
 const styles = StyleSheet.create({
   qrCode: {
@@ -20,15 +21,33 @@ const styles = StyleSheet.create({
 interface Props {
   prescriptionItems: PrescriptionItem[];
   patientName: string;
+  user: User;
 }
 
-export const PrescriptionTemplate: React.FC<Props> = ({prescriptionItems, patientName}) => {
+export const PrescriptionTemplate: React.FC<Props> = ({prescriptionItems, patientName, user}) => {
   const [qrCodeUrl, setQRCodeUrl] = useState('');
 
   useEffect(() => {
     async function generateQRCode() {
-      const url = 'https://google.com'; 
-      const qrCode = await QRCode.toDataURL(url);
+      const data = {
+        id: 1,
+        patientName: patientName,
+        doctorName: user.name,
+        doctorRegistration: user.councilRegistration || '',
+        medications: prescriptionItems.map(item => ({
+          medicationName: item.medicationPresentation.medication.name,
+          medicationDosage: `${item.medicationPresentation.dosage.amount} ${item.medicationPresentation.dosage.unit}`,
+          doseAmount: item.doseAmount,
+          doseUnit: '-',
+          interval: item.interval,
+          intervalUnit: item.intervalUnit,
+          occurrences: item.occurrences,
+          comments: item.comments 
+        })) 
+      }
+      console.log(data)
+      const qrCode = await QRCode.toDataURL(JSON.stringify
+        (data));
       setQRCodeUrl(qrCode);
     }
     generateQRCode();
