@@ -29,6 +29,52 @@ export const PrescriptionTemplate: React.FC<Props> = ({prescriptionItems, patien
 
   useEffect(() => {
     async function generateQRCode() {
+    //   {
+    //     "id": 1,
+    //     "patientName": "Adsa",
+    //     "doctorName": "Rui Fernandes",
+    //     "doctorRegistration": "123456",
+    //     "medications": [
+    //         {
+    //             "medicationName": "Trodelvy",
+    //             "medicationDosage": "200 MG/",
+    //             "doseAmount": 0,
+    //             "doseUnit": "Pó Liofilizado Para Solução Injetável",
+    //             "interval": 0,
+    //             "intervalUnit": "minute",
+    //             "occurrences": 0,
+    //             "comments": "-"
+    //         }
+    //     ]
+    // }
+      // const data = {
+      //   "id": 1,
+      //   "patientName": "João",
+      //   "doctorName": "Dr. Carlos",
+      //   "doctorRegistration": "123456",
+      //   "medications": [
+      //        {
+      //            "medicationName": "Paracetamol",
+      //            "medicationDosage": "500 MG/ML",
+      //            "doseAmount": 5,
+      //            "doseUnit": "pill",
+      //            "interval": 6,
+      //            "intervalUnit": "hour",
+      //            "occurrences": 10,
+      //            "comments": "Tomar com água"
+      //        },
+      //        {
+      //            "medicationName": "Dipirona",
+      //            "medicationDosage": "500 MG/ML",
+      //            "doseAmount": 5,
+      //            "doseUnit": "pill",
+      //            "interval": 6,
+      //            "intervalUnit": "hour",
+      //            "occurrences": 10,
+      //            "comments": "Tomar com água"
+      //        }
+      //   ] 
+      // }
       const data = {
         id: 1,
         patientName: patientName,
@@ -38,7 +84,8 @@ export const PrescriptionTemplate: React.FC<Props> = ({prescriptionItems, patien
           medicationName: item.medicationPresentation.medication.name,
           medicationDosage: `${item.medicationPresentation.dosage.amount} ${item.medicationPresentation.dosage.unit}`,
           doseAmount: item.doseAmount,
-          doseUnit: '-',
+          // doseUnit: item.medicationPresentation.presentation.searchable,
+          doseUnit: 'pill', 
           interval: item.interval,
           intervalUnit: item.intervalUnit,
           occurrences: item.occurrences,

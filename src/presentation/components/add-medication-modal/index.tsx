@@ -63,14 +63,14 @@ export const AddMedicationModal: React.FC<IAddMedicationModalComponentProps> = (
       ...data,
       comments: '-',
       interval: data.frequencyInHours,
-      intervalUnit: 'minute',
+      intervalUnit: 'hour',
       medicationPresentation: {
         id: 1,
         dosage: selectedDosage,
         medication: selectedMedication,
         presentation: selectedPresentation,
       },
-      occurrences: data.frequencyInHours * data.doseAmount,
+      occurrences:  ((data.doseAmount * 24) / data.frequencyInHours) * data.usageDurationInDays,
       doseAmount: data.doseAmount,
       id: Math.random(),
     })
