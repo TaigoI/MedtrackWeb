@@ -33,8 +33,6 @@ const MedicationProvider: React.FC<{children: React.ReactNode}> = ({ children })
     })()
   }, [user]);
 
-  useEffect(() => console.log('🙈',prescriptions), [prescriptions])
-
   return (
     <MedicationContext.Provider value={{
       prescriptions,

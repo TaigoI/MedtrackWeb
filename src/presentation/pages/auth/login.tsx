@@ -64,7 +64,6 @@ export const LoginPage: FC = () => {
   const onSubmitHandler: SubmitHandler<ILogin> = async (values: ILogin) => {
     try {
       const cpf = new Cpf(values.cpf)
-      console.log(values, cpf.value);
       const _user = await authenticate({
         password: values.password,
         username: cpf.value.replace(/\D+/g, ''),
@@ -88,21 +87,13 @@ export const LoginPage: FC = () => {
     cpfInput?.addEventListener('input', (event: any) => {
       const input = event.target;
       let value = input?.value.replace(/\D/g, ''); // Remove non-digit characters
-      console.log('Replace ['+ value+ ']')
   
       if (value.length > 11) {
         value = value.slice(0, 11); // Limit to 11 digits
       }
   
-      const { success } = cpfSchema.safeParse(value);
       const maskedValue = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
       methods.setValue('cpf', maskedValue)
-      // if (success) {
-      // } else {
-      //   methods.setValue('cpf', value)
-      //   // Handle validation error
-      //   // console.log(error.message);
-      // }
     });
   }, []);
 

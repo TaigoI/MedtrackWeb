@@ -12,8 +12,6 @@ import { useNavigate } from 'react-router-dom';
 export const HomeScreen: React.FC = () => {
   const { user }= useAuthentication()
 
-  useEffect(() => console.log('-> ', user), [user])
-
   return !user ?<p>Carregando...</p> :(
     <DashboardContainerComponent 
       appBar={{

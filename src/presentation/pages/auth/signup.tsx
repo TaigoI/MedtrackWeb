@@ -117,7 +117,6 @@ export const SignupPage: FC = () => {
   const navigate = useNavigate()
 
   const onSubmitHandler: SubmitHandler<ISignUp> = (values: ISignUp) => {
-    console.log(JSON.stringify(values, null, 5));
     navigate('/app')
   };
 

@@ -57,11 +57,8 @@ export const AddMedicationModal: React.FC<IAddMedicationModalComponentProps> = (
   const [dosageOptions, setDosageOptions] = useState<UIDosage[]>([]);
   const [presentationOptions, setPresentationOptions] = useState<UIPresentation[]>([]);
   
-  useEffect(() => console.log(errors), [errors])
-
   const handleInternalAdd = (data: IFormValues) => {
     if (!selectedDosage || !selectedMedication || !selectedPresentation) return;
-    console.log(data)
     handleAdd({
       ...data,
       comments: '-',
