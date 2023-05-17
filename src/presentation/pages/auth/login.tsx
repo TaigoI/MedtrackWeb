@@ -195,7 +195,7 @@ export const LoginPage: FC = () => {
                         />
                       )}
                     />
-{/*                     
+                    
                     <Controller
                       control={methods.control}
                       name='persistUser'
@@ -225,7 +225,7 @@ export const LoginPage: FC = () => {
                             }
                           />
                       )}
-                    /> */}
+                    />
                     
 
                     <LoadingButton

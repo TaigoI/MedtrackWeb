@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User } from '../../modules/authentication/entities/User';
 import { authenticateUserUseCase } from '../../modules/authentication/useCases/AuthenticateUserUseCase';
 import { IAuthenticationDTO } from '../../modules/authentication/dtos/IAuthenticationDTO';
-import { NavigateOptions, To, useLocation } from 'react-router-dom';
+import { NavigateOptions, To } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
 interface Props {
@@ -21,19 +21,32 @@ const AuthenticationProvider: React.FC<{children: React.ReactNode}> = ({ childre
   async function authenticate(params: IAuthenticationDTO, persist: boolean): Promise<User> {
     const _user = await authenticateUserUseCase.execute(params);
     setUser(_user);
+    if (persist) {
+      localStorage.setItem("user",JSON.stringify(_user));
+    }
     return _user;
   }
 
   async function logout(navigate: (to: To, options?: NavigateOptions | undefined) => void) {
     setUser(undefined);
     Cookies.remove('accessToken');
+    localStorage.removeItem('user')
     navigate('/');
   }
 
-  useEffect(() => {
+  function bootstrap() {
     if (window.location.href.match('app') && !user) {
-      window.location.replace("/");
-    }
+      const rawUser = localStorage.getItem("user");
+      console.log('rawUser ', rawUser)
+      const accessToken = Cookies.get('accessToken');
+      console.log('accessToken ', accessToken)
+      if (!rawUser || !accessToken) return window.location.replace("/");
+      setUser(JSON.parse(rawUser));
+    } 
+  }
+
+  useEffect(() => {
+    bootstrap();
   }, []);
 
   return (

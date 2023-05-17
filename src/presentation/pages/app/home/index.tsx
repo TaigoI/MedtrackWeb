@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import Toolbar from '@mui/material/Toolbar';
 import { Box } from '@mui/material';
@@ -11,14 +11,10 @@ import { useNavigate } from 'react-router-dom';
 
 export const HomeScreen: React.FC = () => {
   const { user }= useAuthentication()
-  const navigate = useNavigate();
 
-  if (!user) {
-    navigate('/');
-    return <></>;
-  };
+  useEffect(() => console.log('-> ', user), [user])
 
-  return (
+  return !user ?<p>Carregando...</p> :(
     <DashboardContainerComponent 
       appBar={{
         title: `Olá, ${user.name}!`, 
@@ -32,5 +28,5 @@ export const HomeScreen: React.FC = () => {
       </Box>
     
     </DashboardContainerComponent>
-  );
+  ) ;
 };
