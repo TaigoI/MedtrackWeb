@@ -40,8 +40,8 @@ interface ILink {
 export const LandingPageHeader = (props: any) => {
 
   const links: ILink[] = [
-    { id: 1, route: 'Criar conta', url: '/app' },
-    { id: 2, route: 'Entrar', url: '/app' },
+    { id: 1, route: 'Criar conta', url: '/signup' },
+    { id: 2, route: 'Entrar', url: '/login' },
   ];
 
   const [state, setState] = React.useState({
