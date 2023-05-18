@@ -18,7 +18,7 @@ export class UsersRepository implements IUsersRepository {
   }
 
   async authenticate(data: IAuthenticationDTO): Promise<User> {
-    console.log('AUTH ', data)
+    Cookies.remove('accessToken');
     const response = await AxiosHttpClient.post('/auth/login', data);
     if (response.status !== 200) throw new Error(response.data)
     const userResponse = await AxiosHttpClient.get('/user');

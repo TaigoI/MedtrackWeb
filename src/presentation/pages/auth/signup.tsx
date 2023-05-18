@@ -223,15 +223,15 @@ const SignupForm: FC<{
 
 export const SignupPage: FC = () => {
   const defaultValues: ISignUp = {
-    name: "JOSE RUI FERNANDES",
-    cpf: "842.178.925-27",
-    crm: "CRM-AL 123456",
-    birth: "24/02/2002",
-    mobilePhone: "12345678912",
-    businessPhone: "1234567891",
-    email: "ruifernandes1809@gmail.com",
-    password: "rui123456",
-    passwordConfirm: "rui123456",
+    name: "",
+    cpf: "",
+    crm: "",
+    birth: "",
+    mobilePhone: "",
+    businessPhone: "",
+    email: "",
+    password: "",
+    passwordConfirm: "",
   };
 
   const methods = useForm<ISignUp>({
