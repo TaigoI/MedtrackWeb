@@ -6,19 +6,12 @@ import { DashboardContainerComponent } from '../../../components/dashboard-conta
 import { generatedAvatarUrlFactory } from '../../../../shared/utils/generated-avatar-url-factory';
 import { BarChart } from '../../../components/bar-chart';
 import { useAuthentication } from '../../../context/AuthenticationContext';
-import { useNavigate } from 'react-router-dom';
 
 
 export const HomeScreen: React.FC = () => {
   const { user }= useAuthentication()
-  const navigate = useNavigate();
 
-  if (!user) {
-    navigate('/');
-    return <></>;
-  };
-
-  return (
+  return !user ?<p>Carregando...</p> :(
     <DashboardContainerComponent 
       appBar={{
         title: `Olá, ${user.name}!`, 
@@ -32,5 +25,5 @@ export const HomeScreen: React.FC = () => {
       </Box>
     
     </DashboardContainerComponent>
-  );
+  ) ;
 };

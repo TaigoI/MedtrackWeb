@@ -65,7 +65,6 @@ export const CreatePrescriptionScreen: React.FC = () => {
       handleError('Adicione algum medicamento!');
       return;
     }
-    console.log(saveAsTemplate, templateDescription, user)
     if (saveAsTemplate && templateDescription && user) {
       const prescriptionLocal: Prescription = {
         id: Math.random(),
@@ -79,7 +78,6 @@ export const CreatePrescriptionScreen: React.FC = () => {
         user: user.id,
       }
       const savedPrescriptions = localStorage.getItem("prescriptions");
-      console.log('saved', savedPrescriptions, prescriptionLocal)
       if (!savedPrescriptions) {
         localStorage.setItem("prescriptions",JSON.stringify([prescriptionLocal]));
       } else {
@@ -91,9 +89,7 @@ export const CreatePrescriptionScreen: React.FC = () => {
   }
 
   const handleImport = (_prescriptions: Prescription[]) => {
-    console.log('✈ ',_prescriptions)
     const allItems = _prescriptions.reduce((previous: PrescriptionItem[], prescription) => [...previous, ...prescription.items], []);
-    console.log('🧑 ', allItems)
     setPrescriptionItems(allItems);
   }
 

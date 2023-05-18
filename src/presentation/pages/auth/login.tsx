@@ -9,14 +9,17 @@ import {
   Checkbox,
 } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { FC } from 'react';
-import { useForm, SubmitHandler, FormProvider } from 'react-hook-form';
+import { FC, useEffect } from 'react';
+import { useForm, SubmitHandler, FormProvider, Controller } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { literal, object, string, TypeOf } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormInput } from '../../components/auth/form-input';
 
 import styled from '@emotion/styled';
+import { useAuthentication } from '../../context/AuthenticationContext';
+import { Cpf } from '../../../modules/authentication/entities/Cpf';
+import { toast } from 'react-toastify';
 
 export const LinkItem = styled(Link)`
   text-decoration: none;
@@ -27,12 +30,17 @@ export const LinkItem = styled(Link)`
   }
 `;
 
+
+const cpfSchema = string().refine((value) => /^\d{11}$/.test(value.replace(/\D+/, '')), {
+    message: 'Invalid CPF format',
+  }).transform((value) => {
+    const maskedCPF = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+    return maskedCPF;
+  })
 const loginSchema = object({
-  email: string().min(1, 'Digite um email.').email('O email é inválido.'),
+  cpf: string(),
   password: string()
-    .min(1, 'Digite uma senha.')
-    .min(8, 'A senha precisa ter mais que 8 caracteres.')
-    .max(32, 'A senha precisa ter menos que 32 caracteres.'),
+    .min(1, 'Digite uma senha.'),
   persistUser: literal(true).optional(),
 });
 
@@ -40,7 +48,7 @@ type ILogin = TypeOf<typeof loginSchema>;
 
 export const LoginPage: FC = () => {
   const defaultValues: ILogin = {
-    email: '',
+    cpf: '',
     password: '',
   };
 
@@ -49,12 +57,47 @@ export const LoginPage: FC = () => {
     defaultValues,
   });
 
+  const { authenticate } = useAuthentication();
+
   const navigate = useNavigate();
 
-  const onSubmitHandler: SubmitHandler<ILogin> = (values: ILogin) => {
-    console.log(values);
-    navigate('/app');
+  const onSubmitHandler: SubmitHandler<ILogin> = async (values: ILogin) => {
+    try {
+      const cpf = new Cpf(values.cpf)
+      const _user = await authenticate({
+        password: values.password,
+        username: cpf.value.replace(/\D+/g, ''),
+      }, !!values.persistUser);
+      navigate('/app');
+
+      toast.success(`Bem vindo, ${_user.name}!`, {
+        theme: 'colored'
+      }); 
+    } catch (error) {
+      toast.error('Dados inválidos! Tente novamente!', {
+        theme: 'colored'
+      }); 
+    }
   };
+
+  useEffect(() => {
+
+    const cpfInput = document.getElementById('cpfInput');
+  
+    cpfInput?.addEventListener('input', (event: any) => {
+      const input = event.target;
+      let value = input?.value.replace(/\D/g, ''); // Remove non-digit characters
+  
+      if (value.length > 11) {
+        value = value.slice(0, 11); // Limit to 11 digits
+      }
+  
+      const maskedValue = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+      methods.setValue('cpf', maskedValue)
+    });
+  }, []);
+
+
 
   return (
     <Container
@@ -103,7 +146,6 @@ export const LoginPage: FC = () => {
                     noValidate
                     autoComplete='off'
                     sx={{ paddingRight: { sm: '3rem' } }}
-                    onSubmit={methods.handleSubmit(onSubmitHandler)}
                   >
                     <Typography
                       variant='h6'
@@ -113,49 +155,75 @@ export const LoginPage: FC = () => {
                       Acesse sua conta
                     </Typography>
 
-                    <FormInput
-                      label='Email'
-                      type='email'
-                      name='email'
-                      focused
-                      required
-                    />
-                    <FormInput
-                      label='Senha'
-                      type='password'
-                      name='password'
-                      required
-                      focused
-                    />
-
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          size='small'
-                          aria-label='trust this device checkbox'
+                    <Controller
+                      control={methods.control}
+                      name='cpf'
+                      render={({ field: { onChange, onBlur, value, ref } }) => (
+                        <FormInput
+                          label='CPF'
+                          type='text'
+                          name='cpf'
+                          id="cpfInput"
+                          focused
                           required
-                          {...methods.register('persistUser')}
+                          onChange={onChange}
+                          value={value}
                         />
-                      }
-                      label={
-                        <Typography
-                          variant='body2'
-                          sx={{
-                            fontSize: '0.8rem',
-                            fontWeight: 400,
-                            color: '#5e5b5d',
-                          }}
-                        >
-                          Mantenha-me conectado.
-                        </Typography>
-                      }
+                      )}
                     />
+                    <Controller
+                      control={methods.control}
+                      name='password'
+                      render={({ field: { onChange, onBlur, value, ref } }) => (
+                        <FormInput
+                          label='Senha'
+                          onChange={onChange}
+                          value={value}
+                          type='password'
+                          name='password'
+                          required
+                          focused
+                        />
+                      )}
+                    />
+                    
+                    <Controller
+                      control={methods.control}
+                      name='persistUser'
+                      render={({ field: { onChange, onBlur, value, ref } }) => (
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                size='small'
+                                aria-label='trust this device checkbox'
+                                required
+                                name='persistUser'
+                                onChange={onChange}
+                                value={value}
+                              />
+                            }
+                            label={
+                              <Typography
+                                variant='body2'
+                                sx={{
+                                  fontSize: '0.8rem',
+                                  fontWeight: 400,
+                                  color: '#5e5b5d',
+                                }}
+                              >
+                                Mantenha-me conectado.
+                              </Typography>
+                            }
+                          />
+                      )}
+                    />
+                    
 
                     <LoadingButton
                       loading={false}
                       type='submit'
                       variant='contained'
-                      onClick={() => navigate('/app')}
+                      onClick={methods.handleSubmit(onSubmitHandler)}
                       sx={{
                         py: '0.8rem',
                         mt: 2,

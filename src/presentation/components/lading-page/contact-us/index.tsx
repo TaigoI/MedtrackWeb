@@ -16,7 +16,6 @@ export const ContactUs = () => {
 
   const submitForm = (e:any) => {
     e.preventDefault();
-    console.log({ email, firstName, subject });
   };
 
   return (

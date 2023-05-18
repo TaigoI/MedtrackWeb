@@ -13,6 +13,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { DRAWER_WIDTH } from '../../../shared/constants';
 import AppLogo from '../../../assets/images/logo-transparent.png';
 import styles from './styles.module.css';
+import { useAuthentication } from '../../context/AuthenticationContext';
 
 interface Props {
   mobileOpen: boolean;
@@ -21,6 +22,7 @@ interface Props {
 
 export const SidebarComponent: React.FC<Props> = ({mobileOpen, handleDrawerToggle}) => {
 
+  const {logout} = useAuthentication();
   const {pathname} = useLocation();
   const navigate = useNavigate();
 
@@ -52,7 +54,7 @@ export const SidebarComponent: React.FC<Props> = ({mobileOpen, handleDrawerToggl
       <Divider />
       <List>
         <ListItem key={'Sair'} disablePadding>
-          <ListItemButton onClick={() => navigate('/')}>
+          <ListItemButton onClick={() => logout(navigate)}>
             <ListItemIcon>
               <LogoutOutlined />
             </ListItemIcon>

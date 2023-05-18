@@ -3,6 +3,7 @@ import { AxiosHttpClient } from '../../infra/http/AxiosHttpClient';
 import { Prescription } from '../../modules/prescriptions/entities/Prescription';
 import { findPrescriptionsUseCase } from '../../modules/prescriptions/useCases/FindPrescriptionsUseCase';
 import { PrescriptionItem } from '../../modules/prescriptions/entities/PrescriptionItem';
+import { useAuthentication } from './AuthenticationContext';
 
 interface Props {
   prescriptions: Prescription[];
@@ -16,21 +17,21 @@ interface Props {
 const MedicationContext = createContext({} as Props);
 
 const MedicationProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
+  const {user} = useAuthentication();
   const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
   const [prescriptionItems, setPrescriptionItems] = React.useState<PrescriptionItem[]>([]);
   const [patientName, setPatientName] = useState('');
 
   useEffect(() => {
     (async () => {
+      if (!user) return;
       setPrescriptions(await findPrescriptionsUseCase.execute({
         page: 0,
         size: 20,
         templatesOnly: true
       }));
     })()
-  }, []);
-
-  useEffect(() => console.log('🙈',prescriptions), [prescriptions])
+  }, [user]);
 
   return (
     <MedicationContext.Provider value={{
