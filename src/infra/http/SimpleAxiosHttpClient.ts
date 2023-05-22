@@ -1,9 +1,9 @@
 import axios from "axios";
-import { API_DEV_URL } from "../../shared/constants/api-url";
+import { API_URL } from "../../shared/constants/api-url";
 
 
 const axiosInstance = axios.create({
-  baseURL: API_DEV_URL,
+  baseURL: API_URL,
 });
 
 export const SimpleAxiosHttpClient = axiosInstance;

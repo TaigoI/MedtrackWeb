@@ -1,10 +1,10 @@
 import axios from "axios";
-import { API_DEV_URL } from "../../shared/constants/api-url";
+import { API_URL } from "../../shared/constants/api-url";
 import Cookies from 'js-cookie';
 
 
 const axiosInstance = axios.create({
-  baseURL: API_DEV_URL,
+  baseURL: API_URL,
 });
 
 axiosInstance.interceptors.request.use((config)=> {

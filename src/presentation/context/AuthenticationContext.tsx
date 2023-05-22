@@ -35,7 +35,7 @@ const AuthenticationProvider: React.FC<{children: React.ReactNode}> = ({ childre
   }
 
   function bootstrap() {
-    if (window.location.href.match('app') && !user) {
+    if (window.location.href.match('/app') && !user) {
       const rawUser = localStorage.getItem("user");
       const accessToken = Cookies.get('accessToken');
       if (!rawUser || !accessToken) return window.location.replace("/login");
