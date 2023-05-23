@@ -9,10 +9,6 @@ export class PrescriptionsRepository implements IPrescriptionsRepository {
     const response = await AxiosHttpClient.get('/prescription', {
       params
     });
-    const savedPrescriptions = localStorage.getItem("prescriptions");
-    if (savedPrescriptions) {
-      return [...response.data.content, ...JSON.parse(savedPrescriptions)]|| [];
-    }
     return response.data.content || [];
   }
   async create(params: ICreatePrescriptionDTO): Promise<Prescription> {
