@@ -15,6 +15,7 @@ import { Prescription } from '../../../../modules/prescriptions/entities/Prescri
 import { PrescriptionItem } from '../../../../modules/prescriptions/entities/PrescriptionItem';
 import { v4 } from 'uuid';
 import { useAuthentication } from '../../../context/AuthenticationContext';
+import { AxiosHttpClient } from '../../../../infra/http/AxiosHttpClient';
 
 export const CreatePrescriptionScreen: React.FC = () => {
   const [saveAsTemplate, setSaveAsTemplate] = useState<boolean>();
@@ -38,8 +39,6 @@ export const CreatePrescriptionScreen: React.FC = () => {
   const handleOpenAddition = () => setAdditionOpen(true);
   const handleCloseAddition = () => setAdditionOpen(false);
 
-  const {user} = useAuthentication();
-
   const navigate = useNavigate();
 
   function handleError(errorMessage: string) {
@@ -55,7 +54,7 @@ export const CreatePrescriptionScreen: React.FC = () => {
     navigate('/app/receita/pdf', {patientName, prescriptions} as unknown as never);
   }
 
-  function handlePrint() {
+  async function handlePrint() {
     if (!patientName) {
       setPatientNameError('Nome é obrigatório');
       return;
@@ -65,26 +64,23 @@ export const CreatePrescriptionScreen: React.FC = () => {
       handleError('Adicione algum medicamento!');
       return;
     }
-    if (saveAsTemplate && templateDescription && user) {
-      const prescriptionLocal: Prescription = {
-        id: Math.random(),
-        createdAt: new Date(),
-        description: 'Receita de ' + patientName,
-        templateDescription,
-        templateTitle: templateDescription,
-        items: prescriptionItems,
-        template: true,
-        title: 'Receita de ' + patientName,
-        user: user.id,
-      }
-      const savedPrescriptions = localStorage.getItem("prescriptions");
-      if (!savedPrescriptions) {
-        localStorage.setItem("prescriptions",JSON.stringify([prescriptionLocal]));
-      } else {
-        localStorage.setItem("prescriptions",JSON.stringify([...JSON.parse(savedPrescriptions), prescriptionLocal]));
-      }
-
+    const prescriptionDTO = {
+      title: `Receita de ${patientName}`,
+      description: `-`,
+      template: saveAsTemplate,
+      templateTitle: templateDescription,
+      templateDescription,
+      items: prescriptionItems.map(item => ({
+        medicationPresentationDosageId: item.medicationPresentation.id,
+        doseAmount: item.doseAmount,
+        interval: item.interval,
+        intervalUnit: item.intervalUnit,
+        occurrences: item.occurrences,
+        comments: item.comments
+      })) 
     }
+    const response = await AxiosHttpClient.post(`/prescription`, prescriptionDTO)
+    console.log(response.data);
     handleSuccess();
   }
 

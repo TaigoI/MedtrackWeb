@@ -13,6 +13,7 @@ import { PrescriptionItem } from '../../../modules/prescriptions/entities/Prescr
 import { AxiosHttpClient } from '../../../infra/http/AxiosHttpClient';
 import { Dosage } from '../../../modules/medications/entities/Dosage';
 import { Presentation } from '../../../modules/medications/entities/Presentation';
+import { toast } from 'react-toastify';
 
 export interface IAddMedicationModalComponentProps {
   isOpen: boolean;
@@ -57,36 +58,53 @@ export const AddMedicationModal: React.FC<IAddMedicationModalComponentProps> = (
   const [dosageOptions, setDosageOptions] = useState<UIDosage[]>([]);
   const [presentationOptions, setPresentationOptions] = useState<UIPresentation[]>([]);
   
-  const handleInternalAdd = (data: IFormValues) => {
+  const handleInternalAdd = async (data: IFormValues) => {
     if (!selectedDosage || !selectedMedication || !selectedPresentation) return;
-    handleAdd({
-      ...data,
-      comments: '-',
-      interval: data.frequencyInHours,
-      intervalUnit: 'hour',
-      medicationPresentation: {
-        id: 1,
-        dosage: selectedDosage,
-        medication: selectedMedication,
-        presentation: selectedPresentation,
-      },
-      occurrences:  ((data.doseAmount * 24) / data.frequencyInHours) * data.usageDurationInDays,
-      doseAmount: data.doseAmount,
-      id: Math.random(),
-    })
-    handleClose();
-    reset();
+    console.log({        dosage: selectedDosage,
+      medication: selectedMedication,
+      presentation: selectedPresentation,});
+
+    try {
+      const response = await AxiosHttpClient.get(`/mpd/medication/${selectedMedication.id}/presentation/${selectedPresentation.id}/dosage/${selectedDosage.id}`)
+      const { id: medicationPresentationDosageId } = response.data;
+      handleAdd({
+        ...data,
+        comments: '-',
+        interval: data.frequencyInHours,
+        intervalUnit: 'hour',
+        medicationPresentation: {
+          id: medicationPresentationDosageId,
+          dosage: selectedDosage,
+          medication: selectedMedication,
+          presentation: selectedPresentation,
+        },
+        occurrences:  ((data.doseAmount * 24) / data.frequencyInHours) * data.usageDurationInDays,
+        doseAmount: data.doseAmount,
+        id: Math.random(),
+      })
+      handleClose();
+      reset();
+
+    } catch (error) {
+      toast.error('Tipo do medicamento ou dosagem incorreta!', {
+        theme: 'colored'
+      }); 
+    }
   };
 
   async function handleSearchMedication(medication: string) {
+    console.log(`/medication?medication=${medication}`)
     const response = await AxiosHttpClient.get(`/medication?medication=${medication}`);
     setMedicationOptions(response.data.content.map((item: Medication)=> ({...item, id: item.id, label: item.name})));
   }
   async function handleSearchDosage(medication: string) {
+    console.log(`/dosage?medication=${medication}`)
     const response = await AxiosHttpClient.get(`/dosage?medication=${medication}`);
-    setDosageOptions(response.data.content.map((item: Dosage)=> ({...item, id: item.id, label: `${item.amount} ${item.unit}`})));
+    setDosageOptions(
+      response.data.content.map((item: Dosage) => ({...item, id: item.id, label: `${item.amount} ${item.unit}`})));
   }
   async function handleSearchPresentation(medication: string) {
+    console.log(`/presentation?medication=${medication}`)
     const response = await AxiosHttpClient.get(`/presentation?medication=${medication}`);
     setPresentationOptions(response.data.content.map((item: Presentation)=> ({...item, id: item.id, label: item.name})));
   }
