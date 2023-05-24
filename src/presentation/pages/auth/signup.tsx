@@ -53,7 +53,7 @@ const SignupForm: FC<{
         component="form"
         noValidate
         autoComplete="off"
-        sx={{ width: "100%" }}
+        sx={{ width: "80%" }}
         // onSubmit={methods.handleSubmit(onSubmit)}
       >
         <Typography
@@ -298,31 +298,34 @@ export const SignupPage: FC = () => {
     >
       <Box
         sx={{
-          background: "white",
-          width: "50rem",
-          padding: "1rem",
+          display: { sm: "none", md: "block" },
+          backgroundImage: `url(${DoctorImage})`,
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
+          width: "75rem",
+          height: "150vh",
           boxShadow: {
             sm: "0 0 5px #ddd",
           },
-          alignSelf: { sm: "initial", md: "stretch" },
+        }}
+      ></Box>
+      <Box
+        sx={{
+          background: "white",
+          width: "50rem",
+          padding: "5rem",
+          boxShadow: {
+            sm: "0 0 5px #ddd",
+          },
+          alignSelf: { sm: "flex-end", md: "stretch" },
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
+          justifyContent: "center", 
+          alignItems: "center", 
         }}
       >
         <SignupForm methods={methods} onSubmit={onSubmitHandler} />
       </Box>
-      {/* <Box
-        sx={{
-          display: { sm: "none", md: "block" },
-          backgroundImage: `url('../../assets/images/doctor.png')`,
-          width: "15rem",
-          height: "100vh",
-          boxShadow: {
-            sm: "0 0 5px #ddd",
-          },
-        }}
-      ></Box> */}
     </Box>
   );
 };
