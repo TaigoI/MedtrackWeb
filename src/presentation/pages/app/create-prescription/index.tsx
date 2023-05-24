@@ -60,7 +60,7 @@ export const CreatePrescriptionScreen: React.FC = () => {
       return;
     } 
     setPatientNameError(undefined);
-    if (prescriptions.length === 0) {
+    if (prescriptionItems.length === 0) {
       handleError('Adicione algum medicamento!');
       return;
     }
