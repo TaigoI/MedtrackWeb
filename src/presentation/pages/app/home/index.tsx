@@ -28,12 +28,6 @@ export const HomeScreen: React.FC = () => {
           justifyContent: 'center'
         }}>
           <Typography sx={{textAlign: 'justify'}}>
-            <Typography variant="h4" gutterBottom>
-              Bem-vind@ ao Medtrack!
-              <Divider />
-            </Typography>
-            <br />
-            
             <Typography variant='h6' gutterBottom>
               🩺 Hora do atendimento?
               <Divider />
